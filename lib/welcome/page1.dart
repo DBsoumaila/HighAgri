@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ha2/pages/authentification/splash.dart';
 
 class PageUnePrincipale extends StatelessWidget {
   @override
@@ -242,6 +243,8 @@ class _PageUneState extends State<PageUne>{
   ),
   onPressed: () {
     //redirection vers la page signup ppour créer un compte
+     Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => SplashPage()));
    },
   child: Text('Créer Compte',
   style: TextStyle(

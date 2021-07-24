@@ -6,7 +6,6 @@ import 'package:ha2/pages/drawerPages/echanges.dart';
 import 'package:ha2/pages/drawerPages/maladies.dart';
 import 'package:ha2/pages/drawerPages/parametres.dart';
 import 'package:ha2/pages/drawerPages/services.dart';
-import 'package:ha2/pages/testPages/favorites_page.dart';
 import 'package:ha2/pages/testPages/people_page.dart';
 import 'package:ha2/pages/testPages/user_page.dart';
 

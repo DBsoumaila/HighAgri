@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ha2/pages/authentification/splash.dart';
 import 'package:ha2/pages/dashboard/dash.dart';
+import 'package:ha2/pages/drawerPages/profil.dart';
 import 'package:ha2/welcome/page1.dart';
-import 'package:ha2/widget/button_widget.dart';
-import 'package:ha2/widget/navigation_drawer_widget.dart';
+
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +39,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) => Scaffold(
     
         body: Center(
-        child: Dashboard(),
+        child: DashboardPageControl(),
       ),
      
       );
