@@ -1,6 +1,13 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:ha2/pages/charts/phChart.dart';
 import 'package:ha2/widget/navigation_drawer_widget.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+
+
 
 
 
@@ -30,6 +37,20 @@ class _DashBoardPageState extends State<DashBoardPage> {
     Scaffold()
   ];
   int  _currentIndex=0;
+  
+
+  // données
+   List<Ph> dataPh = [
+    Ph("2021",13,charts.ColorUtil.fromDartColor(Colors.blue)),
+     Ph("2022",10,charts.ColorUtil.fromDartColor(Colors.green)),
+      Ph("2023",20,charts.ColorUtil.fromDartColor(Colors.yellow)),
+       Ph("2024",5,charts.ColorUtil.fromDartColor(Colors.pink)),
+        Ph("2025",17,charts.ColorUtil.fromDartColor(Colors.black)),
+         Ph("2026",19,charts.ColorUtil.fromDartColor(Colors.green)),
+          Ph("2027",26,charts.ColorUtil.fromDartColor(Colors.blue)),
+    
+  ];
+
   
    var data = [0.0, 1.0, 1.5, 2.0, 0.0, 0.0, -0.5, -1.0, -0.5, 0.0, 0.0];
   var data1 = [0.0,-2.0,3.5,-2.0,0.5,0.7,0.8,1.0,2.0,3.0,3.2];
@@ -302,9 +323,52 @@ String hourTime(DateTime dateTime)
   
 
 
+  
+
+
+ Material Chart(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+
+                  Padding(
+                    padding: EdgeInsets.all(1.0),
+                    child: Text(title, style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.blueAccent,
+                    ),),
+                  ),
+                  PhChart(data: dataPh,titre: title,),
+                  //Initialize the chart widget
+
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  //to update datat  from data table
+  
+
+
   @override
   Widget build(BuildContext context) {
      final screenHeight = MediaQuery.of(context).size.height;
+    
+     
   return Scaffold(
     
         drawer: NavigationDrawerWidget(),
@@ -345,35 +409,35 @@ String hourTime(DateTime dateTime)
           ),
             ],
           ),
-           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: myCircularItems("Quarterly Profits","68.7M"),
-          ),
-           
-          Padding(
-            padding: const EdgeInsets.only(right:8.0),
-            child: myTextItems("Mktg. Spend","48.6M"),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right:8.0),
-            child: myTextItems("Users","25.5M"),
-          ),
+          
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: mychart2Items("Conversion","0.9M","+19% of target"),
+            child: mychart2Items("Indications","+19% de Température","voir conseils"),
           ),
            Padding(
             padding: const EdgeInsets.all(8.0),
-            child: mychart2Items("Graphe Temp Evolution","0.9M","+19% of target"),
+            child: Chart("Evolution du pH"),
           ),
            Padding(
             padding: const EdgeInsets.all(8.0),
-            child: mychart2Items("Graphe pH","0.9M","+19% of target"),
+            child: Chart("Evolution de T(°C)"),
           ),
-          Padding(
+           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: mychart2Items("Graphe pKa","0.9M","+19% of target"),
+            child: Chart("Evolution du pKa"),
           ),
+           Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Chart("Evolution de l'Hmd."),
+          ),
+         
+
+         
+
+         
+
+
+         
 
 
         ],
@@ -381,9 +445,6 @@ String hourTime(DateTime dateTime)
           
           StaggeredTile.extent(4, 90.0),
           StaggeredTile.extent(4, 70),//row 
-           StaggeredTile.extent(2, 250.0),//..
-          StaggeredTile.extent(2, 120.0),
-          StaggeredTile.extent(2, 120.0),
           StaggeredTile.extent(4, 250.0),
           StaggeredTile.extent(4, 250.0),
           StaggeredTile.extent(4, 250.0),
@@ -399,4 +460,10 @@ String hourTime(DateTime dateTime)
       );
 }
 
+}
+class Ph {
+  Ph(this.year, this.valeur,  this.barColor);
+final String year;
+  final charts.Color barColor;
+  final double valeur;
 }
