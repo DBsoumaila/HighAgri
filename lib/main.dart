@@ -3,9 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:ha2/pages/authentification/splash.dart';
 import 'package:ha2/pages/dashboard/dash.dart';
 import 'package:ha2/pages/drawerPages/profil.dart';
+import 'package:ha2/pages/gallery/gallerypage.dart';
 import 'package:ha2/welcome/page1.dart';
-
-
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,10 +36,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
-    
         body: Center(
-        child: DashboardPageControl(),
-      ),
-     
+          child: DashboardPageControl(),
+        ),
       );
 }

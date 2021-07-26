@@ -1,14 +1,12 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:ha2/pages/authentification/login.dart';
 import 'package:ha2/pages/drawerPages/echanges.dart';
 import 'package:ha2/pages/drawerPages/maladies.dart';
 import 'package:ha2/pages/drawerPages/parametres.dart';
 import 'package:ha2/pages/drawerPages/services.dart';
+import 'package:ha2/pages/gallery/gallerypage.dart';
 import 'package:ha2/pages/testPages/people_page.dart';
 import 'package:ha2/pages/testPages/user_page.dart';
-
 
 class NavigationDrawerWidget extends StatelessWidget {
   final padding = EdgeInsets.symmetric(horizontal: 20);
@@ -21,8 +19,8 @@ class NavigationDrawerWidget extends StatelessWidget {
 
     return Drawer(
       child: Material(
-       color: Color.fromRGBO(50, 75, 205, 1),
-      //color: Colors.green[700],
+        //color: Color.fromRGBO(50, 75, 205, 1),
+        color: Colors.green,
         child: ListView(
           children: <Widget>[
             buildHeader(
@@ -174,7 +172,7 @@ class NavigationDrawerWidget extends StatelessWidget {
     switch (index) {
       case 0:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => PeoplePage(),
+          builder: (context) => GalleryPage(),
         ));
         break;
       case 1:
