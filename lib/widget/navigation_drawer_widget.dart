@@ -5,6 +5,7 @@ import 'package:ha2/pages/drawerPages/maladies.dart';
 import 'package:ha2/pages/drawerPages/parametres.dart';
 import 'package:ha2/pages/drawerPages/services.dart';
 import 'package:ha2/pages/gallery/gallerypage.dart';
+import 'package:ha2/pages/propos/apropos.dart';
 import 'package:ha2/pages/testPages/people_page.dart';
 import 'package:ha2/pages/testPages/user_page.dart';
 
@@ -73,11 +74,16 @@ class NavigationDrawerWidget extends StatelessWidget {
                     icon: Icons.settings_outlined,
                     onClicked: () => selectedItem(context, 4),
                   ),
+                  buildMenuItem(
+                    text: 'A propos',
+                    icon: Icons.info_outlined,
+                    onClicked: () => selectedItem(context, 5),
+                  ),
                   const SizedBox(height: 16),
                   buildMenuItem(
                     text: 'déconnexion',
                     icon: Icons.logout_rounded,
-                    onClicked: () => selectedItem(context, 5),
+                    onClicked: () => selectedItem(context, 6),
                   ),
                 ],
               ),
@@ -198,7 +204,12 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 5:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => Login(),
+          builder: (context) => AboutUs(),
+        ));
+        break;
+      case 6:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AboutUs(),
         ));
         break;
     }

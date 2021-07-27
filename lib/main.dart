@@ -4,6 +4,8 @@ import 'package:ha2/pages/authentification/splash.dart';
 import 'package:ha2/pages/dashboard/dash.dart';
 import 'package:ha2/pages/drawerPages/profil.dart';
 import 'package:ha2/pages/gallery/gallerypage.dart';
+import 'package:ha2/pages/params/settings.dart';
+import 'package:ha2/pages/propos/apropos.dart';
 import 'package:ha2/welcome/page1.dart';
 
 Future main() async {
@@ -37,7 +39,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
-          child: DashboardPageControl(),
+          child: MyHomePage(title: ""),
         ),
       );
 }
