@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:ha2/http/services/authService.dart';
 import 'package:ha2/pages/authentification/forgeted.dart';
 import 'package:ha2/pages/authentification/signup.dart';
 import 'package:ha2/widget/btn_widget.dart';
 import 'package:ha2/widget/header_container.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  Login({Key? key}) : super(key: key);
+
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final mailController = TextEditingController();
+  final passController = TextEditingController();
+
+  FirebaseService firebaseService = new FirebaseService();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    mailController.dispose();
+    passController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         //drawer: NavigationDrawerWidget(),
@@ -15,7 +36,7 @@ class Login extends StatelessWidget {
           backgroundColor: Colors.green,
         ),
         body: Container(
-          padding: EdgeInsets.only(bottom: 10),
+          padding: EdgeInsets.only(bottom: 10.0),
           child: StaggeredGridView.count(
             crossAxisCount: 4,
             children: <Widget>[
@@ -29,16 +50,21 @@ class Login extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          _textInput(hint: "Email", icon: Icons.email),
-                          _textInput(hint: "Password", icon: Icons.vpn_key),
+                          _textInput(
+                              controller: mailController,
+                              hint: "Email",
+                              icon: Icons.email),
+                          _textInput(
+                              controller: passController,
+                              hint: "Password",
+                              icon: Icons.vpn_key),
                           Expanded(
                             child: Center(
                               child: ButtonWidget(
                                 onClick: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => RegPage()));
+                                  firebaseService.signIn(
+                                      email: mailController.text,
+                                      password: passController.text);
                                 },
                                 btnText: "LOGIN",
                               ),
@@ -78,6 +104,9 @@ class Login extends StatelessWidget {
                                 },
                                 child: Text("Mot de passe oublié ?")),
                           ),
+                          Column(
+                              //implémenter le logi google et facebook ici
+                              )
                         ],
                       ),
                     ),

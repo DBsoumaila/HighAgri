@@ -6,6 +6,7 @@ import 'package:ha2/camera/camera.dart';
 import 'package:ha2/http/pagesHttp/datatest.dart';
 import 'package:ha2/http/pagesHttp/post_controller.dart';
 import 'package:ha2/pages/authentification/forgeted.dart';
+import 'package:ha2/pages/authentification/login.dart';
 import 'package:ha2/pages/authentification/splash.dart';
 import 'package:ha2/pages/dashboard/dash.dart';
 import 'package:ha2/pages/drawerPages/profil.dart';
@@ -14,6 +15,12 @@ import 'package:ha2/pages/params/settings.dart';
 import 'package:ha2/pages/propos/apropos.dart';
 import 'package:ha2/welcome/page1.dart';
 import 'camera/global_library_file.dart' as globals;
+import 'package:flutter/material.dart';
+
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
+
+import 'errors/erreur.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,14 +31,15 @@ Future main() async {
 
   // Obtain a list of the available cameras on the device.
   final cameras = await availableCameras();
+
   // Get a specific camera from the list of available cameras.
 
   final firstCamera = cameras.first;
 
   globals.cameraVak = firstCamera;
   //Firebase
-  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  //await Firebase.initializeApp();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -60,12 +68,26 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  /// The future is part of the state of our widget. We should not call `initializeApp`
+  /// directly inside [build].
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
-  Widget build(BuildContext context) => Scaffold(
-          body: Center(
-        child: PageUne(),
-      ) /* TakePictureScreen(
-          camera: globals.cameraVak,
-        ),*/
-          );
+  Widget build(BuildContext context) => FutureBuilder(
+        // Initialize FlutterFire:
+        future: _initialization,
+        builder: (context, snapshot) {
+          // Check for errors
+          if (snapshot.hasError) {
+            return Erreur();
+          }
+
+          // Once complete, show your application
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Login();
+          }
+
+          // Otherwise, show something whilst waiting for initialization to complete
+          return PageUne();
+        },
+      );
 }
