@@ -5,6 +5,7 @@ import 'package:ha2/pages/drawerPages/maladies.dart';
 import 'package:ha2/pages/drawerPages/parametres.dart';
 import 'package:ha2/pages/drawerPages/services.dart';
 import 'package:ha2/pages/gallery/gallerypage.dart';
+import 'package:ha2/pages/params/settings.dart';
 import 'package:ha2/pages/propos/apropos.dart';
 import 'package:ha2/pages/testPages/people_page.dart';
 import 'package:ha2/pages/testPages/user_page.dart';
@@ -199,7 +200,7 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 4:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => ParametresPage(),
+          builder: (context) => Params(),
         ));
         break;
       case 5:

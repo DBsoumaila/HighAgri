@@ -261,4 +261,12 @@ class GalleryPage extends StatelessWidget {
       ),
     );
   }
+
+  ajouterUneImage(ImageDetails imageDetails) {
+    _images.add(imageDetails);
+  }
+
+  ajouterPlusieursImage(List<ImageDetails> imageDetails) {
+    _images.addAll(imageDetails);
+  }
 }

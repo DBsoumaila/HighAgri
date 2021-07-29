@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:ha2/pages/authentification/forgeted.dart';
+import 'package:ha2/pages/authentification/login.dart';
 import 'package:ha2/pages/authentification/signup.dart';
 import 'package:ha2/widget/btn_widget.dart';
 import 'package:ha2/widget/header_container.dart';
 
-class Login extends StatelessWidget {
+class ForgetedPass extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         //drawer: NavigationDrawerWidget(),
         appBar: AppBar(
-          title: Text('Connexion'),
+          title: Text('Passe Oublié'),
           centerTitle: true,
           backgroundColor: Colors.green,
         ),
@@ -21,7 +21,7 @@ class Login extends StatelessWidget {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  HeaderContainer("Authentification !"),
+                  HeaderContainer("Réinitialiser"),
                   Expanded(
                     flex: 1,
                     child: Container(
@@ -30,7 +30,7 @@ class Login extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           _textInput(hint: "Email", icon: Icons.email),
-                          _textInput(hint: "Password", icon: Icons.vpn_key),
+                          // _textInput(hint: "Password", icon: Icons.vpn_key),
                           Expanded(
                             child: Center(
                               child: ButtonWidget(
@@ -40,7 +40,7 @@ class Login extends StatelessWidget {
                                       MaterialPageRoute(
                                           builder: (context) => RegPage()));
                                 },
-                                btnText: "LOGIN",
+                                btnText: "CHANGER",
                               ),
                             ),
                           ),
@@ -48,12 +48,20 @@ class Login extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              RichText(
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                      text: "Pas de compte ? ",
-                                      style: TextStyle(color: Colors.black)),
-                                ]),
+                              Container(
+                                margin: EdgeInsets.only(top: 0.0),
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Login()));
+                                    },
+                                    child: Text("Me connecter")),
+                              ),
+                              Container(
+                                child: Text('|'),
                               ),
                               TextButton(
                                   onPressed: () {
@@ -62,21 +70,8 @@ class Login extends StatelessWidget {
                                         MaterialPageRoute(
                                             builder: (context) => RegPage()));
                                   },
-                                  child: Text("Créer")),
+                                  child: Text("Créer un compte")),
                             ],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 0.0),
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgetedPass()));
-                                },
-                                child: Text("Mot de passe oublié ?")),
                           ),
                         ],
                       ),

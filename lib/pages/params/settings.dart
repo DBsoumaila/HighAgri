@@ -8,7 +8,7 @@ ValueNotifier<Color> accentColor = ValueNotifier(Colors.blueAccent);
 
 void main() {
   initSettings().then((_) {
-    runApp(MyApp());
+    runApp(Params());
   });
 }
 
@@ -22,12 +22,12 @@ Future<void> initSettings() async {
 bool _isDarkTheme = true;
 bool _isUsingHive = true;
 
-class MyApp extends StatelessWidget {
+class Params extends StatelessWidget {
   // This widget is the root of your application.
 
   @override
   Widget build(BuildContext context) {
-    return MyHomePage(title: 'Flutter Demo Home Page');
+    return MyHomePage(title: 'Paramètres');
   }
 }
 
@@ -46,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return ValueListenableBuilder<Color>(
       valueListenable: accentColor,
       builder: (_, color, __) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'App Settings Demo',
         theme: _isDarkTheme
             ? ThemeData.dark().copyWith(accentColor: color)
@@ -75,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        Text('Shared Pref'),
+        Text('Partager Pref'),
         Switch(
             activeColor: Theme.of(context).accentColor,
             value: _isUsingHive,
@@ -88,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 initSettings();
               });
             }),
-        Text('Hive Storage'),
+        Text('Stockage Hive'),
       ],
     );
   }
@@ -97,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        Text('Light Theme'),
+        Text('Clair'),
         Switch(
             activeColor: Theme.of(context).accentColor,
             value: _isDarkTheme,
@@ -105,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
               _isDarkTheme = newVal;
               setState(() {});
             }),
-        Text('Dark Theme'),
+        Text('Mode Nuit'),
       ],
     );
   }
@@ -129,7 +130,7 @@ class _AppBodyState extends State<AppBody> {
           onPressed: () {
             openAppSettings(context);
           },
-          child: Text('Start Demo'),
+          child: Text('Demo'),
         ),
       ],
     );
@@ -151,6 +152,6 @@ Widget _buildClearCacheButton(BuildContext context) {
         'Cache cleared for selected cache.',
       );
     },
-    child: Text('Clear selected Cache'),
+    child: Text('Supprimer le cache'),
   );
 }
