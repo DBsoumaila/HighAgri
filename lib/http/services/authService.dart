@@ -17,21 +17,21 @@ class FirebaseService {
         print('Ce compte eexiste déjà avec cet Email');
       }
     }
+  }
 
-    Future<void> signUpEmailNameOnly(
-        {required String email, required String password}) async {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          print('Faible mot de passe');
-        } else if (e.code == 'email-already-in-use') {
-          print('Ce compte eexiste déjà avec cet Email');
-        }
-      } catch (e) {
-        print(e);
+  Future<void> signUpEmailNameOnly(
+      {required String email, required String password}) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('Faible mot de passe');
+      } else if (e.code == 'email-already-in-use') {
+        print('Ce compte eexiste déjà avec cet Email');
       }
+    } catch (e) {
+      print(e);
     }
   }
 

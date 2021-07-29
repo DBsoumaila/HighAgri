@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:ha2/http/services/authService.dart';
 import 'package:ha2/pages/authentification/login.dart';
 import 'package:ha2/widget/btn_widget.dart';
 import 'package:ha2/widget/header_container.dart';
@@ -10,6 +11,19 @@ class RegPage extends StatefulWidget {
 }
 
 class _RegPageState extends State<RegPage> {
+  final mailController = TextEditingController();
+  final passController = TextEditingController();
+
+  FirebaseService firebaseService = new FirebaseService();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    mailController.dispose();
+    passController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,16 +48,23 @@ class _RegPageState extends State<RegPage> {
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         _textInput(hint: "Nom et Prénom", icon: Icons.person),
-                        _textInput(hint: "Email", icon: Icons.email),
+                        _textInput(
+                            controller: mailController,
+                            hint: "Email",
+                            icon: Icons.email),
                         _textInput(hint: "Téléphone", icon: Icons.call),
-                        _textInput(hint: "Password", icon: Icons.vpn_key),
+                        _textInput(
+                            controller: passController,
+                            hint: "Password",
+                            icon: Icons.vpn_key),
                         Expanded(
                           child: Center(
                             child: ButtonWidget(
                               btnText: "CREER",
                               onClick: () {
-                                //Création du compte ici
-                                Navigator.pop(context);
+                                firebaseService.signUpEmailNameOnly(
+                                    email: mailController.text,
+                                    password: passController.text);
                               },
                             ),
                           ),
