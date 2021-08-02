@@ -1,6 +1,30 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-class ServicesPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:ha2/camera/camera.dart';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:ha2/camera/global_library_file.dart' as globals;
+
+class ServicesPage extends StatefulWidget {
+  const ServicesPage({
+    Key? key,
+  }) : super(key: key);
+  @override
+  _ServicesPageState createState() => _ServicesPageState();
+}
+
+class _ServicesPageState extends State<ServicesPage> {
+  late File? imageToServer = null;
+
+  final piker = ImagePicker();
+  chooseImage(ImageSource imageSource) async {
+    final pickedImage = await piker.pickImage(source: imageSource);
+    setState(() {
+      imageToServer = File(pickedImage!.path);
+    });
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
       //drawer: NavigationDrawerWidget(),
@@ -32,7 +56,7 @@ class ServicesPage extends StatelessWidget {
                 SizedBox(
                   height: 20.0,
                 ),
-                Expanded(
+                Container(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -44,11 +68,41 @@ class ServicesPage extends StatelessWidget {
                           height: 100.0,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                              child: Text(
-                                'Selectionnez une image',
-                              ),
-                            ),
+                            child: Container(
+                                child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text('Selectionnez une image'),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    //si c'est la gallery
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      TakePictureScreen(
+                                                          camera: globals
+                                                              .cameraVak)));
+                                        },
+                                        child: Icon(
+                                          Icons.camera_alt_outlined,
+                                          color: Colors.deepOrange,
+                                        )),
+                                    //si c est la camera
+                                    TextButton(
+                                        onPressed: () {
+                                          chooseImage(ImageSource.gallery);
+                                        },
+                                        child: Icon(Icons.collections_outlined))
+                                  ],
+                                )
+                              ],
+                            )),
                           ),
                         ),
                       ),
@@ -79,7 +133,16 @@ class ServicesPage extends StatelessWidget {
                           elevation: 7.0,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text("Résultats d'analyse"),
+                            child: imageToServer != null
+                                ? Container(
+                                    height: 200.0,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: FileImage(imageToServer!))),
+                                  )
+                                : Container(
+                                    height: 200,
+                                  ),
                           ),
                         ),
                       )

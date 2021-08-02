@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:ha2/http/services/authService.dart';
 import 'package:ha2/pages/authentification/forgeted.dart';
 import 'package:ha2/pages/authentification/signup.dart';
+import 'package:ha2/pages/dashboard/dash.dart';
 import 'package:ha2/widget/btn_widget.dart';
 import 'package:ha2/widget/header_container.dart';
 
@@ -62,9 +63,17 @@ class _LoginState extends State<Login> {
                             child: Center(
                               child: ButtonWidget(
                                 onClick: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DashboardPageControl()));
+
+                                  /*
                                   firebaseService.signIn(
                                       email: mailController.text,
                                       password: passController.text);
+                                      */
                                 },
                                 btnText: "LOGIN",
                               ),

@@ -3,6 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ha2/camera/camera.dart';
+import 'package:ha2/firestore/serviceStore.dart';
+import 'package:ha2/firestore/testDonnes.dart';
 import 'package:ha2/http/pagesHttp/datatest.dart';
 import 'package:ha2/http/pagesHttp/post_controller.dart';
 import 'package:ha2/pages/authentification/forgeted.dart';
@@ -10,6 +12,7 @@ import 'package:ha2/pages/authentification/login.dart';
 import 'package:ha2/pages/authentification/splash.dart';
 import 'package:ha2/pages/dashboard/dash.dart';
 import 'package:ha2/pages/drawerPages/profil.dart';
+import 'package:ha2/pages/drawerPages/services.dart';
 import 'package:ha2/pages/gallery/gallerypage.dart';
 import 'package:ha2/pages/params/settings.dart';
 import 'package:ha2/pages/propos/apropos.dart';
@@ -83,7 +86,7 @@ class _MainPageState extends State<MainPage> {
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
-            return Login();
+            return ServicesPage();
           }
 
           // Otherwise, show something whilst waiting for initialization to complete

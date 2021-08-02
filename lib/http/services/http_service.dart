@@ -21,7 +21,7 @@ class HttpService {
 
       return posts;
     } else {
-      throw "Impossible de recuérer les données";
+      throw "Impossible de recupérer les données";
     }
   }
 
@@ -51,6 +51,26 @@ class HttpService {
     });
   }
 
+  Future<Traitement> createAlbum(String title, String imagePath, key) async {
+    final response = await http.post(
+      Uri.parse('https://jsonplaceholder.typicode.com/albums'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'title': title, 'image': imagePath}),
+    );
+
+    if (response.statusCode == 201) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      return Traitement.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create Traitement.');
+    }
+  }
+
 // Call Web services
 
 // a fonction de services
@@ -66,4 +86,17 @@ new RaisedButton(
 
 
 */
+}
+
+class Traitement {
+  final int id;
+  final String title;
+  final String image;
+
+  Traitement({required this.id, required this.title, required this.image});
+
+  factory Traitement.fromJson(Map<String, dynamic> json) {
+    return Traitement(
+        id: json['id'], title: json['title'], image: json['image']);
+  }
 }

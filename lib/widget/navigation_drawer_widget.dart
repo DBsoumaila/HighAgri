@@ -41,9 +41,8 @@ class NavigationDrawerWidget extends StatelessWidget {
               padding: padding,
               child: Column(
                 children: [
-                  const SizedBox(height: 12),
-                  buildSearchField(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
+                  Divider(color: Colors.white70),
                   buildMenuItem(
                     text: 'Gallerie',
                     icon: Icons.collections_outlined,
