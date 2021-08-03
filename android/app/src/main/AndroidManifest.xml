@@ -5,6 +5,7 @@
    <application
         android:label="ha2"
         android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
 
         <activity

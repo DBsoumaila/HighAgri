@@ -1,10 +1,28 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ha2/camera/camera.dart';
+import 'package:cross_file/cross_file.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:ha2/camera/global_library_file.dart' as globals;
+
+final TextEditingController maxWidthController = TextEditingController();
+final TextEditingController maxHeightController = TextEditingController();
+final TextEditingController qualityController = TextEditingController();
+typedef void OnPickImageCallback(
+    double? maxWidth, double? maxHeight, int? quality);
+dynamic _pickImageError;
+String? _retrieveDataError;
+Text? _getRetrieveErrorWidget() {
+  if (_retrieveDataError != null) {
+    final Text result = Text(_retrieveDataError!);
+    _retrieveDataError = null;
+    return result;
+  }
+  return null;
+}
 
 class ServicesPage extends StatefulWidget {
   const ServicesPage({
@@ -15,14 +33,144 @@ class ServicesPage extends StatefulWidget {
 }
 
 class _ServicesPageState extends State<ServicesPage> {
-  late File? imageToServer = null;
+  List<XFile>? _imageFileList;
 
-  final piker = ImagePicker();
-  chooseImage(ImageSource imageSource) async {
-    final pickedImage = await piker.pickImage(source: imageSource);
-    setState(() {
-      imageToServer = File(pickedImage!.path);
-    });
+  set _imageFile(XFile? value) {
+    _imageFileList = value == null ? null : [value];
+  }
+
+  Future<void> _displayPickImageDialog(
+      BuildContext context, OnPickImageCallback onPick) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Add optional parameters'),
+            content: Column(
+              children: <Widget>[
+                TextField(
+                  controller: maxWidthController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration:
+                      InputDecoration(hintText: "Enter maxWidth if desired"),
+                ),
+                TextField(
+                  controller: maxHeightController,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration:
+                      InputDecoration(hintText: "Enter maxHeight if desired"),
+                ),
+                TextField(
+                  controller: qualityController,
+                  keyboardType: TextInputType.number,
+                  decoration:
+                      InputDecoration(hintText: "Enter quality if desired"),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                  child: const Text('PICK'),
+                  onPressed: () {
+                    double? width = maxWidthController.text.isNotEmpty
+                        ? double.parse(maxWidthController.text)
+                        : null;
+                    double? height = maxHeightController.text.isNotEmpty
+                        ? double.parse(maxHeightController.text)
+                        : null;
+                    int? quality = qualityController.text.isNotEmpty
+                        ? int.parse(qualityController.text)
+                        : null;
+                    onPick(width, height, quality);
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          );
+        });
+  }
+
+  Widget _previewImages() {
+    final Text? retrieveError = _getRetrieveErrorWidget();
+    if (retrieveError != null) {
+      return retrieveError;
+    }
+    if (_imageFileList != null) {
+      return Semantics(
+          child: ListView.builder(
+            key: UniqueKey(),
+            itemBuilder: (context, index) {
+              // Why network for web?
+              // See https://pub.dev/packages/image_picker#getting-ready-for-the-web-platform
+              return Semantics(
+                label: 'image_picker_example_picked_image',
+                child: kIsWeb
+                    ? Image.network(_imageFileList![index].path)
+                    : Image.file(File(_imageFileList![index].path)),
+              );
+            },
+            itemCount: _imageFileList!.length,
+          ),
+          label: 'image_picker_example_picked_images');
+    } else if (_pickImageError != null) {
+      return Text(
+        'Pick image error: $_pickImageError',
+        textAlign: TextAlign.center,
+      );
+    } else {
+      return const Text(
+        'You have not yet picked an image.',
+        textAlign: TextAlign.center,
+      );
+    }
+  }
+
+  final ImagePicker piker = ImagePicker();
+  void _onImageButtonPressed(ImageSource source,
+      {BuildContext? context, bool isMultiImage = false}) async {
+    if (isMultiImage) {
+      await _displayPickImageDialog(context!,
+          (double? maxWidth, double? maxHeight, int? quality) async {
+        try {
+          final pickedFileList = await piker.pickMultiImage(
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: quality,
+          );
+          setState(() {
+            _imageFileList = pickedFileList;
+          });
+        } catch (e) {
+          setState(() {
+            _pickImageError = e;
+          });
+        }
+      });
+    } else {
+      await _displayPickImageDialog(context!,
+          (double? maxWidth, double? maxHeight, int? quality) async {
+        try {
+          final pickedFile = await piker.pickImage(
+            source: source,
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: quality,
+          );
+          setState(() {
+            _imageFile = pickedFile;
+          });
+        } catch (e) {
+          setState(() {
+            _pickImageError = e;
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -96,7 +244,9 @@ class _ServicesPageState extends State<ServicesPage> {
                                     //si c est la camera
                                     TextButton(
                                         onPressed: () {
-                                          chooseImage(ImageSource.gallery);
+                                          _onImageButtonPressed(
+                                              ImageSource.gallery,
+                                              context: context);
                                         },
                                         child: Icon(Icons.collections_outlined))
                                   ],
@@ -132,18 +282,11 @@ class _ServicesPageState extends State<ServicesPage> {
                         child: Card(
                           elevation: 7.0,
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: imageToServer != null
-                                ? Container(
-                                    height: 200.0,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: FileImage(imageToServer!))),
-                                  )
-                                : Container(
-                                    height: 200,
-                                  ),
-                          ),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                child: _previewImages(),
+                                height: 200.0,
+                              )),
                         ),
                       )
                     ])),

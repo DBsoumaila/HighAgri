@@ -16,7 +16,12 @@ import 'package:ha2/pages/drawerPages/services.dart';
 import 'package:ha2/pages/gallery/gallerypage.dart';
 import 'package:ha2/pages/params/settings.dart';
 import 'package:ha2/pages/propos/apropos.dart';
+import 'package:ha2/realtime_database/areaChart.dart';
+import 'package:ha2/realtime_database/linechart.dart';
+import 'package:ha2/realtime_database/get_data.dart';
+import 'package:ha2/realtime_database/rtime_test.dart';
 import 'package:ha2/welcome/page1.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'camera/global_library_file.dart' as globals;
 import 'package:flutter/material.dart';
 
@@ -41,8 +46,12 @@ Future main() async {
 
   globals.cameraVak = firstCamera;
   //Firebase
-  await Firebase.initializeApp();
+
+// charts init
+
   //await Firebase.initializeApp();
+//realtime database
+  globals.appl = await Firebase.initializeApp();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -86,7 +95,7 @@ class _MainPageState extends State<MainPage> {
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
-            return ServicesPage();
+            return PageUne();
           }
 
           // Otherwise, show something whilst waiting for initialization to complete
