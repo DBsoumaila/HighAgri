@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'dart:convert';
 import 'package:ha2/models/post.dart';
 import 'package:http/http.dart';
@@ -51,13 +53,13 @@ class HttpService {
     });
   }
 
-  Future<Traitement> createAlbum(String title, String imagePath, key) async {
+  Future<Traitement> createAlbum(String imagePath) async {
     final response = await http.post(
       Uri.parse('https://jsonplaceholder.typicode.com/albums'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{'title': title, 'image': imagePath}),
+      body: jsonEncode(<String, String>{'image': imagePath}),
     );
 
     if (response.statusCode == 201) {
@@ -89,14 +91,12 @@ new RaisedButton(
 }
 
 class Traitement {
-  final int id;
   final String title;
   final String image;
 
-  Traitement({required this.id, required this.title, required this.image});
+  Traitement({required this.title, required this.image});
 
   factory Traitement.fromJson(Map<String, dynamic> json) {
-    return Traitement(
-        id: json['id'], title: json['title'], image: json['image']);
+    return Traitement(title: json['title'], image: json['image']);
   }
 }

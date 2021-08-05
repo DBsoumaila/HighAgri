@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ha2/meteo/home/home_controller.dart';
+import 'package:ha2/meteo/weather_controller.dart';
 import 'package:ha2/pages/authentification/login.dart';
 import 'package:ha2/pages/drawerPages/echanges.dart';
 import 'package:ha2/pages/drawerPages/maladies.dart';
 import 'package:ha2/pages/drawerPages/parametres.dart';
-import 'package:ha2/pages/drawerPages/services.dart';
+import 'package:ha2/pages/drawerPages/services/services.dart';
 import 'package:ha2/pages/gallery/gallerypage.dart';
 import 'package:ha2/pages/params/settings.dart';
 import 'package:ha2/pages/propos/apropos.dart';
@@ -66,24 +68,30 @@ class NavigationDrawerWidget extends StatelessWidget {
                     icon: Icons.question_answer_outlined,
                     onClicked: () => selectedItem(context, 3),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
                   Divider(color: Colors.white70),
-                  const SizedBox(height: 24),
+                  buildMenuItem(
+                    text: 'Météo',
+                    icon: Icons.nights_stay_outlined,
+                    onClicked: () => selectedItem(context, 4),
+                  ),
+                  Divider(color: Colors.white70),
+                  const SizedBox(height: 20),
                   buildMenuItem(
                     text: 'Paramètres',
                     icon: Icons.settings_outlined,
-                    onClicked: () => selectedItem(context, 4),
+                    onClicked: () => selectedItem(context, 5),
                   ),
                   buildMenuItem(
                     text: 'A propos',
                     icon: Icons.info_outlined,
-                    onClicked: () => selectedItem(context, 5),
+                    onClicked: () => selectedItem(context, 6),
                   ),
                   const SizedBox(height: 16),
                   buildMenuItem(
                     text: 'déconnexion',
                     icon: Icons.logout_rounded,
-                    onClicked: () => selectedItem(context, 6),
+                    onClicked: () => selectedItem(context, 7),
                   ),
                 ],
               ),
@@ -199,15 +207,20 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 4:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => Params(),
+          builder: (context) => AppControl(),
         ));
         break;
       case 5:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AboutUs(),
+          builder: (context) => Params(),
         ));
         break;
       case 6:
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AboutUs(),
+        ));
+        break;
+      case 7:
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AboutUs(),
         ));

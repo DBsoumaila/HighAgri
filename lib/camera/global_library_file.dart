@@ -9,3 +9,10 @@ CameraDescription cameraVak = new CameraDescription(
     sensorOrientation: 0);
 
 late FirebaseApp appl;
+
+String titre = '';
+int? code = 0;
+String date = '';
+String message = '';
+String headers = '';
+bool isResponse = false;

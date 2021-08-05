@@ -1,4 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:ha2/camera/displayImage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 
 class DetailsPage extends StatelessWidget {
   final String imagePath;
@@ -118,11 +126,14 @@ class DetailsPage extends StatelessWidget {
                                   width: 1,
                                   style: BorderStyle.solid),
                               borderRadius: BorderRadius.circular(50)),
-                          onPressed: () {},
+                          onPressed: () async {
+                            File f = await getImageFileFromAssets(imagePath);
+                            postImageToBackend(f.path);
+                          },
                           padding: EdgeInsets.symmetric(vertical: 15),
                           color: Colors.green,
                           child: Text(
-                            'Partager',
+                            'Analyser',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.white,
@@ -139,5 +150,15 @@ class DetailsPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<File> getImageFileFromAssets(String path) async {
+    final byteData = await rootBundle.load('$path');
+
+    final file = File('${(await getTemporaryDirectory()).path}');
+    await file.writeAsBytes(byteData.buffer
+        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file;
   }
 }
