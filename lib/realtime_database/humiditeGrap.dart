@@ -11,15 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math';
 
-class TestChart extends StatefulWidget {
-  const TestChart({Key? key, required this.app}) : super(key: key);
+class HumiditeChart extends StatefulWidget {
+  const HumiditeChart({Key? key, required this.app}) : super(key: key);
   final FirebaseApp app;
 
   @override
   _ChartsPageState createState() => _ChartsPageState();
 }
 
-class _ChartsPageState extends State<TestChart> {
+class _ChartsPageState extends State<HumiditeChart> {
   //air_humidite
   late DatabaseReference _airHumiditeRef;
   //mise en plqce des streams de donnees
@@ -90,15 +90,15 @@ class _ChartsPageState extends State<TestChart> {
   @override
   Widget build(BuildContext context) {
     // Here the _updateDataSource method is called for every second.
-    timer =
-        Timer.periodic(const Duration(milliseconds: 1000), _updateDataSource);
+    // timer =
+    //     Timer.periodic(const Duration(milliseconds: 1000), _updateDataSource);
 
     //On appel la fonction de recuperation tant qu il y a encore de donnees
-    // timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-    //   while (!(chartData.length == count)) {
-    //     _updateDataSourceFromFire(timer);
-    //   }
-    // });
+    timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      while (!(chartData.length == count)) {
+        _updateDataSourceFromFire(timer);
+      }
+    });
 
     return Scaffold(
         body: Center(

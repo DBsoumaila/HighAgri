@@ -62,18 +62,21 @@ class _ChartsPageState extends State<AreaCharts> {
         LinearGradient(colors: color, stops: stops);
 
     return Scaffold(
-        body: Center(
-            child: Container(
-                child: SfCartesianChart(
-                    primaryXAxis: DateTimeAxis(),
-                    series: <ChartSeries>[
-          // Renders area chart
-          AreaSeries<SalesData, DateTime>(
-              dataSource: chartData,
-              xValueMapper: (SalesData sales, _) => sales.minutes,
-              yValueMapper: (SalesData sales, _) => sales.sales,
-              gradient: gradientColors)
-        ]))));
+        body: Card(
+      elevation: 10.0,
+      child: Center(
+          child: Container(
+              child: SfCartesianChart(
+                  primaryXAxis: DateTimeAxis(),
+                  series: <ChartSeries>[
+            // Renders area chart
+            AreaSeries<SalesData, DateTime>(
+                dataSource: chartData,
+                xValueMapper: (SalesData sales, _) => sales.minutes,
+                yValueMapper: (SalesData sales, _) => sales.sales,
+                gradient: gradientColors)
+          ]))),
+    ));
   }
 }
 

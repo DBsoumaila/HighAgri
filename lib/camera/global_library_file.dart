@@ -11,7 +11,7 @@ CameraDescription cameraVak = new CameraDescription(
 late FirebaseApp appl;
 
 String titre = '';
-int? code = 0;
+late int code = 0;
 String date = '';
 String message = '';
 String headers = '';

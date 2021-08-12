@@ -11,6 +11,7 @@ import 'package:ha2/pages/params/settings.dart';
 import 'package:ha2/pages/propos/apropos.dart';
 import 'package:ha2/pages/testPages/people_page.dart';
 import 'package:ha2/pages/testPages/user_page.dart';
+import 'package:ha2/serviceAnalyse/services/analyse_coton.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   final padding = EdgeInsets.symmetric(horizontal: 20);
@@ -196,9 +197,8 @@ class NavigationDrawerWidget extends StatelessWidget {
         ));
         break;
       case 2:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => ServicesPage(),
-        ));
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => ServicesPage()));
         break;
       case 3:
         Navigator.of(context).push(MaterialPageRoute(

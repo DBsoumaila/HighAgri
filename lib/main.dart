@@ -102,7 +102,7 @@ class _MainPageState extends State<MainPage> {
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
-            return Coton();
+            return Login();
           }
 
           // Otherwise, show something whilst waiting for initialization to complete

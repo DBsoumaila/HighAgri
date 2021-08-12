@@ -1,14 +1,30 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:ha2/camera/camera.dart';
 import 'package:ha2/camera/displayImage.dart';
 import 'package:ha2/pages/charts/phChart.dart';
+import 'package:ha2/realtime_database/areaChart.dart';
+import 'package:ha2/realtime_database/humiditeGrap.dart';
+import 'package:ha2/realtime_database/testChart.dart';
 import 'package:ha2/widget/navigation_drawer_widget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:ha2/camera/global_library_file.dart' as globals;
+
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+//realtime database
+  globals.appl = await Firebase.initializeApp();
+
+  runApp(Dashboard());
+}
 
 class Dashboard extends StatelessWidget {
   static final String title = 'High Agri';
@@ -30,6 +46,34 @@ class DashBoardPage extends StatefulWidget {
 class _DashBoardPageState extends State<DashBoardPage> {
   final List _screens = [Scaffold(), Scaffold(), Scaffold(), Scaffold()];
   int _currentIndex = 0;
+
+  late DatabaseReference _pHRef;
+  late StreamSubscription<Event> _pHSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    String LASTMESSAGE = '';
+
+    // Demonstrates configuring the database directly
+    final FirebaseDatabase database = FirebaseDatabase(app: globals.appl);
+
+    _pHRef = database.reference().child('soil_ph');
+    _pHRef.orderByKey().limitToLast(1).onValue;
+
+    Query query = _pHRef.orderByKey().limitToLast(1);
+    print('Connected directly configured database and read ');
+
+    database.setPersistenceEnabled(true);
+    database.setPersistenceCacheSizeBytes(10000000);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _pHSubscription.cancel();
+  }
 
   // données
   List<Ph> dataPh = [
@@ -313,6 +357,118 @@ class _DashBoardPageState extends State<DashBoardPage> {
   }
   //to update datat  from data table
 
+  Material AreaChartTemp(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Container(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+                Container(height: 200, child: Center(child: AreaCharts()))
+                //Initialize the chart widget
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Material ChartPhEvolution(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Center(
+          child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(1.0),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ),
+            Container(
+              child: Center(
+                child: Container(
+                  height: 300.0,
+                  child: Center(
+                    child: HumiditeChart(app: globals.appl),
+                  ),
+                ),
+              ),
+            )
+            //Initialize the chart widget
+          ],
+        ),
+      )),
+    );
+  }
+
+  Material ChartPhLive(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Center(
+          child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(1.0),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ),
+            Container(
+              child: Center(
+                child: Container(
+                  height: 300.0,
+                  child: Center(
+                    child: TestChart(app: globals.appl),
+                  ),
+                ),
+              ),
+            )
+            //Initialize the chart widget
+          ],
+        ),
+      )),
+    );
+  }
+
+  //to update datat  from data table
   Material Chart(String title) {
     return Material(
       color: Colors.white,
@@ -338,10 +494,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
                       ),
                     ),
                   ),
-                  PhChart(
-                    data: dataPh,
-                    titre: title,
-                  ),
+
                   //Initialize the chart widget
                 ],
               ),
@@ -351,8 +504,8 @@ class _DashBoardPageState extends State<DashBoardPage> {
       ),
     );
   }
-  //to update datat  from data table
 
+  //to update datat  from data table
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -396,12 +549,18 @@ class _DashBoardPageState extends State<DashBoardPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: mychart2Items(
-                  "Indications", "+19% de Température", "voir conseils"),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AreaChartTemp('Evolution de l\'humidité'),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Chart("Evolution du pH"),
+              child: ChartPhLive("Live  Humidité"),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ChartPhEvolution("Graphe réel du pH"),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -419,8 +578,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
           staggeredTiles: [
             StaggeredTile.extent(4, 90.0),
             StaggeredTile.extent(4, 70), //row
-            StaggeredTile.extent(4, 250.0),
-            StaggeredTile.extent(4, 250.0),
+            StaggeredTile.extent(4, 300.0),
+            StaggeredTile.extent(4, 400.0),
+            StaggeredTile.extent(4, 400.0),
             StaggeredTile.extent(4, 250.0),
             StaggeredTile.extent(4, 250.0),
           ],

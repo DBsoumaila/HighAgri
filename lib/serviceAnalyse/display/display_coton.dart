@@ -12,24 +12,15 @@ import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:ha2/models/imageModel.dart';
 import 'package:ha2/pages/drawerPages/services/coton.dart';
 import 'package:ha2/pages/gallery/gallerypage.dart' as imagesGal;
+import 'package:ha2/serviceAnalyse/services/analyse_coton.dart';
 import 'package:http/http.dart' as http;
 import 'package:ha2/camera/global_library_file.dart' as globals;
 import 'package:path/path.dart';
 
-String titre = '';
-int? code = 0;
-String date = '';
-String message = '';
-String headers = '';
-
-class DisplayPictureScreen extends StatelessWidget {
+class DisplayCoton extends StatelessWidget {
   final String imagePath;
-  Callback? callback;
-  Widget? ecran;
 
-  DisplayPictureScreen(
-      {Key? key, required this.imagePath, this.callback, this.ecran})
-      : super(key: key);
+  DisplayCoton({Key? key, required this.imagePath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,22 +53,26 @@ class DisplayPictureScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () async {
-                //on envoie pour analyse apres avoir recu le resultat en utilisant await
-                if (callback != null && (ecran != null)) {
-                  callback!();
-                  globals.isResponse = true;
-
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ecran as Widget));
-                }
-
                 await postImageToBackend(imagePath);
-                globals.isResponse = true;
-                //on redirige vers la page de résultats
+                print("--------------------Verificqtion des valeurs");
+                print("Titre:" + globals.titre);
+                print("Headers:" + globals.headers);
+                print("Code:${globals.code}");
+                print("Message:" + globals.message);
+                print("La date:${globals.date}");
+                print('------------------ Retour Final ----------------');
 
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Coton()));
-                globals.isResponse = false;
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AnalyseCoton(
+                              code: globals.code,
+                              date: globals.date,
+                              headers: globals.headers,
+                              message: globals.message,
+                              titre: globals.titre,
+                              isResOk: true,
+                            )));
               },
               child: Icon(Icons.security_outlined),
             ),
@@ -135,7 +130,6 @@ Future<Response> postImageToBackend(String urlImage) async {
   print("Message:" + globals.message);
   print("La date:${globals.date}");
   print('------------------ Retour Final ----------------');
-  globals.isResponse = true;
   return response;
 }
 
@@ -166,35 +160,4 @@ class Traitement {
   factory Traitement.fromJson(Map<String, dynamic> json) {
     return Traitement(title: json['title'], image: json['image']);
   }
-}
-
-Widget ReponseDuServeur(titre, statut, reponse, dateRequete) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      Text(
-        titre,
-        style: TextStyle(fontSize: 20, color: Colors.green),
-      ),
-      Text(
-        statut,
-        style: TextStyle(
-          fontSize: 16,
-        ),
-      ),
-      Text(
-        reponse,
-        style: TextStyle(
-          fontSize: 16,
-        ),
-      ),
-      Text(
-        dateRequete,
-        style: TextStyle(
-          fontSize: 16,
-        ),
-      )
-    ],
-  );
 }

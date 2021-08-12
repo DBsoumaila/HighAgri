@@ -1,22 +1,13 @@
 import 'dart:io';
-import 'dart:async';
-import 'package:dio/dio.dart';
 
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ha2/camera/camera.dart';
 import 'package:cross_file/cross_file.dart';
-import 'package:ha2/camera/displayImage.dart';
+import 'package:ha2/serviceAnalyse/takepicture/take_coton_picture.dart';
+import 'package:ha2/serviceAnalyse/takepicture/take_tomate_picture.dart';
 
-import 'package:camera/camera.dart';
-import 'package:flutter/services.dart';
-import 'package:ha2/models/imageModel.dart';
-import 'package:ha2/pages/drawerPages/services/coton.dart';
-import 'package:ha2/pages/gallery/gallerypage.dart' as imagesGal;
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:ha2/camera/global_library_file.dart' as globals;
 
 final TextEditingController maxWidthController = TextEditingController();
@@ -35,28 +26,29 @@ Text? _getRetrieveErrorWidget() {
   return null;
 }
 
-class Coton extends StatefulWidget {
-  late String? titre;
-  late String? date;
-  late String? reponse;
-  late String? message;
-  late int? code;
-  late bool? isRes;
+class AnalyseTomate extends StatefulWidget {
+  final String titre;
+  final String headers;
+  final String message;
+  final String date;
+  final int code;
+  final bool isResOk;
 
-  Coton({
-    Key? key,
-    this.titre,
-    this.date,
-    this.reponse,
-    this.message,
-    this.isRes,
-    this.code,
-  }) : super(key: key);
+  const AnalyseTomate(
+      {Key? key,
+      required this.titre,
+      required this.headers,
+      required this.message,
+      required this.date,
+      required this.code,
+      required this.isResOk})
+      : super(key: key);
+
   @override
   _ServicesPageState createState() => _ServicesPageState();
 }
 
-class _ServicesPageState extends State<Coton> {
+class _ServicesPageState extends State<AnalyseTomate> {
   List<XFile>? _imageFileList;
 
   set _imageFile(XFile? value) {
@@ -69,38 +61,38 @@ class _ServicesPageState extends State<Coton> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Add optional parameters'),
+            title: Text('Paramètres additionnels'),
             content: Column(
               children: <Widget>[
                 TextField(
                   controller: maxWidthController,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration:
-                      InputDecoration(hintText: "Enter maxWidth if desired"),
+                      InputDecoration(hintText: "Entrez maxWidth (optionnel)"),
                 ),
                 TextField(
                   controller: maxHeightController,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration:
-                      InputDecoration(hintText: "Enter maxHeight if desired"),
+                      InputDecoration(hintText: "Entrez maxHeight (optionnel)"),
                 ),
                 TextField(
                   controller: qualityController,
                   keyboardType: TextInputType.number,
-                  decoration:
-                      InputDecoration(hintText: "Enter quality if desired"),
+                  decoration: InputDecoration(
+                      hintText: "Entrez la  qualité (optionnel)"),
                 ),
               ],
             ),
             actions: <Widget>[
               TextButton(
-                child: const Text('CANCEL'),
+                child: const Text('Annuler'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                  child: const Text('PICK'),
+                  child: const Text('Prendre'),
                   onPressed: () {
                     double? width = maxWidthController.text.isNotEmpty
                         ? double.parse(maxWidthController.text)
@@ -119,12 +111,94 @@ class _ServicesPageState extends State<Coton> {
         });
   }
 
+  Widget _previewImages() {
+    final Text? retrieveError = _getRetrieveErrorWidget();
+    if (retrieveError != null) {
+      return retrieveError;
+    }
+    if (_imageFileList != null) {
+      return Semantics(
+          child: ListView.builder(
+            key: UniqueKey(),
+            itemBuilder: (context, index) {
+              // Why network for web?
+              // See https://pub.dev/packages/image_picker#getting-ready-for-the-web-platform
+              return Semantics(
+                label: 'image_picker_example_picked_image',
+                child: kIsWeb
+                    ? Image.network(_imageFileList![index].path)
+                    : Image.file(File(_imageFileList![index].path)),
+              );
+            },
+            itemCount: _imageFileList!.length,
+          ),
+          label: 'image_picker_example_picked_images');
+    } else if (_pickImageError != null) {
+      return Text(
+        'Pick image error: $_pickImageError',
+        textAlign: TextAlign.center,
+      );
+    } else {
+      return const Text(
+        'Aucune image sélectionnée pour l\'instant!',
+        textAlign: TextAlign.center,
+      );
+    }
+  }
+
+  Widget vueCamera() {
+    return ReponseDuServeur(
+        widget.titre, widget.code, widget.message, widget.date);
+  }
+
+  final ImagePicker piker = ImagePicker();
+  void _onImageButtonPressed(ImageSource source,
+      {BuildContext? context, bool isMultiImage = false}) async {
+    if (isMultiImage) {
+      await _displayPickImageDialog(context!,
+          (double? maxWidth, double? maxHeight, int? quality) async {
+        try {
+          final pickedFileList = await piker.pickMultiImage(
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: quality,
+          );
+          setState(() {
+            _imageFileList = pickedFileList;
+          });
+        } catch (e) {
+          setState(() {
+            _pickImageError = e;
+          });
+        }
+      });
+    } else {
+      await _displayPickImageDialog(context!,
+          (double? maxWidth, double? maxHeight, int? quality) async {
+        try {
+          final pickedFile = await piker.pickImage(
+            source: source,
+            maxWidth: maxWidth,
+            maxHeight: maxHeight,
+            imageQuality: quality,
+          );
+          setState(() {
+            _imageFile = pickedFile;
+          });
+        } catch (e) {
+          setState(() {
+            _pickImageError = e;
+          });
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
-
       //drawer: NavigationDrawerWidget(),
       appBar: AppBar(
-        title: Text('Services'),
+        title: Text('Services Tomate'),
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
@@ -140,11 +214,11 @@ class _ServicesPageState extends State<Coton> {
                   child: Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                      'Analysez vos feuilles Cotons',
+                      'Analysez  vos Tomates',
                       style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20.0),
+                          fontSize: 15.0),
                     ),
                   ),
                 ),
@@ -168,7 +242,7 @@ class _ServicesPageState extends State<Coton> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text('Selectionnez une image'),
+                                Text('Sélectionnez des images de coton'),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -180,7 +254,7 @@ class _ServicesPageState extends State<Coton> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      TakePictureScreen(
+                                                      TakeTomate(
                                                           camera: globals
                                                               .cameraVak)));
                                         },
@@ -190,7 +264,11 @@ class _ServicesPageState extends State<Coton> {
                                         )),
                                     //si c est la gallery
                                     TextButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          _onImageButtonPressed(
+                                              ImageSource.gallery,
+                                              context: context);
+                                        },
                                         child: Icon(Icons.collections_outlined))
                                   ],
                                 )
@@ -220,19 +298,20 @@ class _ServicesPageState extends State<Coton> {
                         ],
                       ),
                       Container(
-                        height: 300.0,
+                        height: 200.0,
                         width: double.infinity,
                         child: Card(
                           elevation: 7.0,
                           child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                  child: Center(
-                                child: (globals.isResponse)
-                                    ? Text('Vos résultats d\'analyse  ici')
-                                    : ReponseDuServeur(
-                                        titre, code.toString(), message, date),
-                              ))),
+                                child: (widget.isResOk == true)
+                                    ? vueCamera()
+                                    : Center(
+                                        child: Text(
+                                            'Aucune analyse effectuée pour l\'instant !')),
+                                height: double.infinity,
+                              )),
                         ),
                       )
                     ])),
@@ -241,33 +320,44 @@ class _ServicesPageState extends State<Coton> {
       ));
 }
 
-//envoie de post request qui marche correctement
-Future<Response> postImageToBackendCoton(String urlImage) async {
-  var formData = FormData.fromMap({
-    'image': await MultipartFile.fromFile(urlImage, filename: 'image.jpg'),
-    // 'files': [
-    //   await MultipartFile.fromFile('./text1.txt', filename: 'text1.txt'),
-    //   await MultipartFile.fromFile('./text2.txt', filename: 'text2.txt'),
-    // ]
-  });
-  var dio = Dio();
-  var url = 'https://cotonapp7-ago324jaqa-ey.a.run.app';
-  // var url = 'https://tomato-ago324jaqa-ey.a.run.app';
-  var response = await dio.post(url, data: formData);
-//initialiser les valeurs de retours
-  globals.titre = response.data.toString().toUpperCase();
-  globals.code = response.statusCode!;
-  globals.message = response.statusMessage.toString();
-  globals.headers = response.headers.toString();
-  globals.date = response.headers.value('Date').toString();
-
-  print("--------------------Retour du serveur");
-  print("Titre:" + globals.titre);
-  print("Headers:" + globals.headers);
-  print("Code:${globals.code}");
-  print("Message:" + globals.message);
-  print("La date:${globals.date}");
-  print('------------------ Retour Final ----------------');
-  globals.isResponse = true;
-  return response;
+Widget ReponseDuServeur(titre, int statut, reponse, date) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Text(
+        'maladie :' + titre,
+        style: TextStyle(fontSize: 15, color: Colors.green),
+      ),
+      Divider(
+        color: Colors.black87,
+      ),
+      Text(
+        'Statut:' + '         ' + statut.toString(),
+        style: TextStyle(
+          fontSize: 16,
+        ),
+      ),
+      Text(
+        'Analyse:' + '         ' + reponse,
+        style: TextStyle(
+          fontSize: 16,
+        ),
+      ),
+      SizedBox(
+        height: 10.0,
+      ),
+      Divider(
+        color: Colors.black45,
+      ),
+      Text(
+        'date:',
+        style: TextStyle(fontSize: 20.0),
+      ),
+      Text(
+        date,
+        style: TextStyle(fontSize: 16, color: Colors.amber),
+      )
+    ],
+  );
 }

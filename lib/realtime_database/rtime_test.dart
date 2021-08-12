@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePageData> {
     _counterRef = FirebaseDatabase.instance.reference().child('counter');
     // Demonstrates configuring the database directly
     final FirebaseDatabase database = FirebaseDatabase(app: widget.app);
-    _messagesRef = database.reference().child('soumaila');
+    _messagesRef = database.reference().child('soil_ph');
     database.reference().child('counter').get().then((DataSnapshot? snapshot) {
       print(
           'Connected to directly configured database and read ${snapshot!.value}');
@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePageData> {
       });
     });
     _messagesSubscription =
-        _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
+        _messagesRef.limitToLast(1).onChildAdded.listen((Event event) {
       print('Child added: ${event.snapshot.value}');
     }, onError: (Object o) {
       final DatabaseError error = o as DatabaseError;
