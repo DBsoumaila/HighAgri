@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ha2/meteo/home/home_controller.dart';
 import 'package:ha2/meteo/weather_controller.dart';
@@ -182,7 +183,7 @@ class NavigationDrawerWidget extends StatelessWidget {
     );
   }
 
-  void selectedItem(BuildContext context, int index) {
+  Future<void> selectedItem(BuildContext context, int index) async {
     Navigator.of(context).pop();
 
     switch (index) {
@@ -221,9 +222,17 @@ class NavigationDrawerWidget extends StatelessWidget {
         ));
         break;
       case 7:
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AboutUs(),
-        ));
+        await FirebaseAuth.instance.signOut();
+        //vérifier si l'utilisateur est bien rentré
+        FirebaseAuth.instance.authStateChanges().listen((User? user) {
+          if (user == null) {
+            //utilisateur deconnecte
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Login(),
+            ));
+          } else {}
+        });
+
         break;
     }
   }

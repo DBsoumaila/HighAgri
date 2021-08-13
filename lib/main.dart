@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ha2/camera/HomePage.dart';
 import 'package:ha2/camera/camera.dart';
+import 'package:ha2/errors/attente.dart';
 import 'package:ha2/firestore/serviceStore.dart';
 import 'package:ha2/firestore/testDonnes.dart';
 import 'package:ha2/http/pagesHttp/datatest.dart';
@@ -15,6 +16,7 @@ import 'package:ha2/pages/authentification/forgeted.dart';
 import 'package:ha2/pages/authentification/login.dart';
 import 'package:ha2/pages/authentification/splash.dart';
 import 'package:ha2/pages/dashboard/dash.dart';
+import 'package:ha2/pages/drawerPages/maladies.dart';
 import 'package:ha2/pages/drawerPages/profil.dart';
 import 'package:ha2/pages/drawerPages/services/coton.dart';
 import 'package:ha2/pages/drawerPages/services/services.dart';
@@ -102,11 +104,11 @@ class _MainPageState extends State<MainPage> {
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
-            return AboutUs();
+            return PageUne();
           }
 
           // Otherwise, show something whilst waiting for initialization to complete
-          return PageUne();
+          return Attente();
         },
       );
 }
