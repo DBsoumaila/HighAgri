@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:ha2/http/services/authService.dart';
@@ -6,6 +7,8 @@ import 'package:ha2/pages/authentification/signup.dart';
 import 'package:ha2/pages/dashboard/dash.dart';
 import 'package:ha2/widget/btn_widget.dart';
 import 'package:ha2/widget/header_container.dart';
+import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -52,9 +55,10 @@ class _LoginState extends State<Login> {
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           _textInput(
-                              controller: mailController,
-                              hint: "Email",
-                              icon: Icons.email),
+                            controller: mailController,
+                            hint: "Email",
+                            icon: Icons.email,
+                          ),
                           _textInput(
                               controller: passController,
                               hint: "Password",
@@ -62,18 +66,67 @@ class _LoginState extends State<Login> {
                           Expanded(
                             child: Center(
                               child: ButtonWidget(
-                                onClick: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DashboardPageControl()));
+                                onClick: () async {
+                                  bool canGoToDash = false;
+                                  try {
+                                    //se connecter
+                                    await FirebaseAuth.instance
+                                        .signInWithEmailAndPassword(
+                                            email: mailController.text,
+                                            password: passController.text);
+                                    //on met a true si on n a pas rencontre d erreurs
+                                    canGoToDash = true;
+                                  } on FirebaseAuthException catch (e) {
+                                    if (e.code == 'weak-password') {
+                                      print('Faible mot de passe');
 
-                                  /*
-                                  firebaseService.signIn(
-                                      email: mailController.text,
-                                      password: passController.text);
-                                      */
+                                      //a chaque erreur on met a false
+                                      canGoToDash = false;
+                                    } else if (e.code ==
+                                        'email-already-in-use') {
+                                      print(
+                                          'Ce compte eexiste déjà avec cet Email');
+                                      // toast(
+                                      //     'Un compte existe déjà avec cet Email');
+                                      canGoToDash = false;
+                                    } else if (e.code == 'wrong-password') {
+                                      print("Password inccorect");
+
+                                      canGoToDash = false;
+                                      // toast('Passe incorrect !');
+                                    } else if (e.code == 'invalid-email') {
+                                      print("Email Incorrect");
+                                      canGoToDash = false;
+                                      // toast('Email incorrect !');
+                                    } else if (e.code == 'user-disabled') {
+                                      print("Utilisateur desactivee");
+                                      canGoToDash = false;
+                                      // toast('Cet utilisateur est désactivé');
+                                    } else if (e.code == 'user-not-found') {
+                                      print("Cet utilisateur n'existe pas !");
+                                      canGoToDash = false;
+                                      // toast('Utilisateur inexistant');
+                                    } else {
+                                      canGoToDash = false;
+                                      // toast('Une erreur est survenuee!');
+                                    }
+                                  }
+
+                                  //vérifier si l'utilisateur est bien rentré
+                                  FirebaseAuth.instance
+                                      .authStateChanges()
+                                      .listen((User? user) {
+                                    if (user == null) {
+                                      print('L utilisateur n est pas connecté');
+                                    } else if (canGoToDash) {
+                                      print('Utilisateur connecté');
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DashboardPageControl()));
+                                    }
+                                  });
                                 },
                                 btnText: "LOGIN",
                               ),
@@ -148,4 +201,15 @@ Widget _textInput({controller, hint, icon}) {
       ),
     ),
   );
+}
+
+void toast(String nom) {
+  Fluttertoast.showToast(
+      msg: nom,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0);
 }

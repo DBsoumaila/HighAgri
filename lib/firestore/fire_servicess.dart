@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ha2/models/user.dart';
 // Import the firebase_core and cloud_firestore plugin
@@ -8,19 +9,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 final Stream<QuerySnapshot> _usersStream =
     FirebaseFirestore.instance.collection('users').snapshots();
 
+final FirebaseAuth auth = FirebaseAuth.instance;
+final uid = auth.currentUser!.uid;
+
 Stream collectionStream =
     FirebaseFirestore.instance.collection('users').snapshots();
 
-class FirestoreService {
+class FirestoreService2 {
   FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> saveProduct(User user) {
-    return _db.collection('users').doc(user.id).set(user.toMap());
+  Future<void> saveProduct(Userd user) async {
+    return _db.collection('users').doc(uid).set(user.toMap());
   }
 
-  Stream<List<User>> getProducts() {
+  Stream<List<Userd>> getProducts() {
     return _db.collection('users').snapshots().map((snapshot) => snapshot.docs
-        .map((document) => User.fromFirestore(document.data()))
+        .map((document) => Userd.fromFirestore(document.data()))
         .toList());
   }
 

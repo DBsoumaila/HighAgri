@@ -1,9 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:ha2/firestore/provider.dart';
 import 'package:ha2/http/services/authService.dart';
+import 'package:ha2/models/user.dart';
 import 'package:ha2/pages/authentification/login.dart';
 import 'package:ha2/widget/btn_widget.dart';
 import 'package:ha2/widget/header_container.dart';
+import 'package:ha2/firestore/fire_servicess.dart';
+import 'package:uuid/uuid.dart';
 
 class RegPage extends StatefulWidget {
   @override
@@ -11,15 +17,24 @@ class RegPage extends StatefulWidget {
 }
 
 class _RegPageState extends State<RegPage> {
+  final nomController = TextEditingController();
+  final telController = TextEditingController();
   final mailController = TextEditingController();
   final passController = TextEditingController();
 
-  FirebaseService firebaseService = new FirebaseService();
+  FirestoreService2 firebaseService = new FirestoreService2();
+  UsertProvider service = new UsertProvider();
+  var uuid = Uuid();
+
+  // Create a CollectionReference called users that references the firestore collection
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     mailController.dispose();
+    passController.dispose();
+    telController.dispose();
     passController.dispose();
     super.dispose();
   }
@@ -47,12 +62,18 @@ class _RegPageState extends State<RegPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        _textInput(hint: "Nom et Prénom", icon: Icons.person),
+                        _textInput(
+                            controller: nomController,
+                            hint: "Nom et Prénom",
+                            icon: Icons.person),
                         _textInput(
                             controller: mailController,
                             hint: "Email",
                             icon: Icons.email),
-                        _textInput(hint: "Téléphone", icon: Icons.call),
+                        _textInput(
+                            controller: telController,
+                            hint: "Téléphone",
+                            icon: Icons.call),
                         _textInput(
                             controller: passController,
                             hint: "Password",
@@ -61,10 +82,20 @@ class _RegPageState extends State<RegPage> {
                           child: Center(
                             child: ButtonWidget(
                               btnText: "CREER",
-                              onClick: () {
-                                firebaseService.signUpEmailNameOnly(
-                                    email: mailController.text,
-                                    password: passController.text);
+                              onClick: () async {
+                                // creation d un utilisateur dans la base User de Firestore
+                                await FirebaseAuth.instance
+                                    .createUserWithEmailAndPassword(
+                                        email: mailController.text,
+                                        password: passController.text);
+                                //ensuite on ajoute l utilisateur a notre propre base de donees users et on redirige vers l authentificaion
+
+                                addUser(nomController.text, mailController.text,
+                                        telController.text, passController.text)
+                                    .then((value) => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Login())));
                               },
                             ),
                           ),
@@ -81,13 +112,7 @@ class _RegPageState extends State<RegPage> {
                               ]),
                             ),
                             TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Login()));
-                                },
-                                child: Text("Se connecter")),
+                                onPressed: () {}, child: Text("Se connecter")),
                           ],
                         ),
                       ],
@@ -122,5 +147,36 @@ class _RegPageState extends State<RegPage> {
         ),
       ),
     );
+  }
+
+  Future<void> addUser(
+      String nom, String email, String telephone, String password) {
+    // Call the user's CollectionReference to add a new user
+    return users
+        .add({
+          'nom': nom, // John Doe
+          'email': email, // 42
+          'telephone': telephone, // 42
+          'password': password // 42
+        })
+        .then((value) => print("Utilisateur ajouté"))
+        .catchError((error) => print("Erreurr: $error"));
+  }
+
+  Future<void> createUserForLogin(String emaild, String passwordd) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: emaild, password: passwordd);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('...........Mot de passe faible.................');
+      } else if (e.code ==
+          '................email-already-in-use.............') {
+        print(
+            '.................The account already exists for that email................');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

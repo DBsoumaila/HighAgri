@@ -4,21 +4,17 @@ import 'package:ha2/models/user.dart';
 import 'package:uuid/uuid.dart';
 
 class UsertProvider with ChangeNotifier {
-  final firestoreService = FirestoreService();
+  final firestoreService = FirestoreService2();
   late String _nom;
-  late String _prenom;
   late String _id;
   late String _email;
   late String _telephone;
   late String _password;
-  late int _age;
 
   var uuid = Uuid();
 
   //Getters
   String get nom => _nom;
-  String get prenom => _prenom;
-  int get age => _age;
   String get password => _password;
   String get telephone => _telephone;
   String get email => _email;
@@ -27,23 +23,20 @@ class UsertProvider with ChangeNotifier {
   //Setters
   changeName(String value) {
     _nom = value;
+
     notifyListeners();
   }
 
-  loadValues(User product) {
+  loadValues(Userd product) {
     _nom = product.nom;
-    _prenom = product.prenom;
-    _id = product.id;
   }
 
   saveProduct() {
     print(_id);
     if (_id == null) {
-      var newProduct = User(
-          id: uuid.v4(),
+      var newProduct = Userd(
+          uid: uuid.v4(),
           nom: nom,
-          prenom: prenom,
-          age: age,
           email: email,
           telephone: telephone,
           password: password);

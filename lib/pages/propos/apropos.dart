@@ -12,15 +12,15 @@ class AboutUs extends StatelessWidget {
       photographer: 'data ingenieur',
       title: 'BENTALEB Aya',
       details:
-          'Lsequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
+          'Data Engeneer chez High Agri, elle nous met en place des modèles performants avec son co-équipié Mr Aymane.',
     ),
     ImageDetails(
-      imagePath: 'assets/squad/aymane.jpg',
+      imagePath: 'assets/squad/aymane_pic_dat.jpg',
       price: 'description',
       photographer: 'Data Engeneer',
       title: 'HMIDICH Aymane',
       details:
-          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
+          ' L\'un de nos data engeneer. Il est chargeé de du déploiement des modèles de High Agri afin de faire d es prédictions sur des plantes.',
     ),
     ImageDetails(
       imagePath: 'assets/squad/hanane.png',
@@ -28,7 +28,7 @@ class AboutUs extends StatelessWidget {
       photographer: ' Data Engeneer',
       title: 'DAHI Hanane',
       details:
-          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
+          'Data Engeneer chez High Agri. Travaille sur l\'irrigation et l\'automation de drone.',
     ),
     ImageDetails(
       imagePath: 'assets/squad/youssef.png',
@@ -36,15 +36,15 @@ class AboutUs extends StatelessWidget {
       photographer: 'Embebed Systems Engeneer',
       title: 'L. Youssef',
       details:
-          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
+          'Il s\'occupe de tout ce qui est systèmes embarqués chez High Agri. Conception de drones, et mise en place de systèmes d\'irrigation',
     ),
     ImageDetails(
       imagePath: 'assets/squad/nour.png',
-      price: 'Poste',
-      photographer: 'Marketer',
+      price: 'Description',
+      photographer: 'Directrice Marketing',
       title: 'BENRIALA Nour',
       details:
-          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
+          'La directrice Marketing de High Agri. Elle s\'occupe de faire connaitre notre entreprise et nos solutions. C\'est la vitrine de notre entreprise à l\'extérieur.',
     ),
     ImageDetails(
       imagePath: 'assets/squad/soumaila.png',
@@ -52,7 +52,7 @@ class AboutUs extends StatelessWidget {
       photographer: 'Software Ingeneer',
       title: 'DABANGUIBE Soumaïla ',
       details:
-          ' jE Suis le dévelppeur de l équipe, et moi je suis egalement ....',
+          ' Le développeur de la startup High Agri. Développeur full stack web, mobile et deseigner à ses temps perdus.',
     ),
   ];
 
