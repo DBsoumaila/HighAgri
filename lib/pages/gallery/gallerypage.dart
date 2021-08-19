@@ -1,9 +1,176 @@
 import 'package:flutter/material.dart';
+import 'package:ha2/firestore/databaseManager.dart';
+import 'package:ha2/firestore/serviceStore.dart';
 import 'package:ha2/models/imageModel.dart';
 import 'package:ha2/pages/gallery/imageDetail.dart';
 
-class GalleryPage extends StatelessWidget {
+class GalleryPage extends StatefulWidget {
+  @override
+  _GalleryPageState createState() => _GalleryPageState();
+}
+
+class _GalleryPageState extends State<GalleryPage> {
+  //la liste venant de firebase
+  List galleryImages = [];
+
+  //charger ces fonctions a chaque fois que cette page est appelee
+  @override
+  void initState() {
+    super.initState();
+
+    fetchDatabaseList();
+  }
+
+  fetchDatabaseList() async {
+    dynamic resultant = await DatabaseManager().getGalleryPicList();
+
+    if (resultant == null) {
+      print('Impossible de prendre les données');
+    } else {
+      setState(() {
+        galleryImages = resultant;
+      });
+    }
+  }
+
   List<ImageDetails> _images = [
+    ImageDetails(
+      imagePath: 'assets/gallery/1_1.jpg',
+      price: 'description',
+      photographer: 'Martin Andres',
+      title: 'Peches',
+      details: 'Peches dans une assiete',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_2.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Grenadiers',
+      details: 'Grenadiers coupés',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_3.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Raisins',
+      details: 'Raisins violets',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_4.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Montagne',
+      details: 'Montagne pleine de colines',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_5.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Oranges',
+      details: 'Oranges mures',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_6.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Blé',
+      details: 'Blé presque mur',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_7.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Tomates mures',
+      details: 'De belles tomates mures',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_8.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Canards',
+      details: 'Canards au bord du lac',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_9.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Agriculteurs',
+      details: 'Agriculteurs dans une marre avec un torreau',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_10.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Verdure',
+      details: 'Découpage de verdures',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_11.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Blé vert',
+      details: 'Blé en pleine croissance.',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_12.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Tracteur',
+      details: 'Tracteur en pause et ne fonctionnant pas',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_13.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Oranges jaunes',
+      details: 'Oranges dans des feuilles',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_14.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Tournesol',
+      details: ' Tournesols jaunes orientés tous dans une seule direction.',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/1_15.jpg',
+      price: 'description',
+      photographer: 'Pixabay',
+      title: 'Ports couchés',
+      details: 'Ports en train de dormir',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/17.jpg',
+      price: 'description',
+      photographer: 'Pplaner',
+      title: 'Strawberry Ice Cream',
+      details:
+          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/18.jpg',
+      price: 'description',
+      photographer: 'Mtyhg',
+      title: 'Strawberry Ice Cream',
+      details:
+          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/19.jpg',
+      price: 'description',
+      photographer: 'Xin Tyo',
+      title: 'Strawberry Ice Cream',
+      details:
+          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
+    ),
+    ImageDetails(
+      imagePath: 'assets/gallery/21.jpg',
+      price: 'description',
+      photographer: 'Photographe X',
+      title: 'Maladie de 784',
+      details:
+          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
+    ),
     ImageDetails(
       imagePath: 'assets/gallery/1.jpg',
       price: 'description',
@@ -137,38 +304,6 @@ class GalleryPage extends StatelessWidget {
       price: 'description',
       photographer: ' X',
       title: 'Strawberry Ice Cream',
-      details:
-          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
-    ),
-    ImageDetails(
-      imagePath: 'assets/gallery/17.jpg',
-      price: 'description',
-      photographer: 'Pplaner',
-      title: 'Strawberry Ice Cream',
-      details:
-          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
-    ),
-    ImageDetails(
-      imagePath: 'assets/gallery/18.jpg',
-      price: 'description',
-      photographer: 'Mtyhg',
-      title: 'Strawberry Ice Cream',
-      details:
-          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
-    ),
-    ImageDetails(
-      imagePath: 'assets/gallery/19.jpg',
-      price: 'description',
-      photographer: 'Xin Tyo',
-      title: 'Strawberry Ice Cream',
-      details:
-          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
-    ),
-    ImageDetails(
-      imagePath: 'assets/gallery/21.jpg',
-      price: 'description',
-      photographer: 'Photographe X',
-      title: 'Maladie de 784',
       details:
           'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil error aspernatur, sequi inventore eligendi vitae dolorem animi suscipit. Nobis, cumque.',
     ),

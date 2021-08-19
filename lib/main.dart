@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:ha2/camera/HomePage.dart';
 import 'package:ha2/camera/camera.dart';
 import 'package:ha2/errors/attente.dart';
+import 'package:ha2/firestore/firedatalisttest.dart';
 import 'package:ha2/firestore/serviceStore.dart';
 import 'package:ha2/firestore/testDonnes.dart';
 import 'package:ha2/http/pagesHttp/datatest.dart';
@@ -22,12 +23,18 @@ import 'package:ha2/pages/drawerPages/services/coton.dart';
 import 'package:ha2/pages/drawerPages/services/services.dart';
 import 'package:ha2/pages/gallery/gallerypage.dart';
 import 'package:ha2/pages/params/settings.dart';
+import 'package:ha2/pages/profil/ajouterContact.dart';
+import 'package:ha2/pages/profil/contacts.dart';
 import 'package:ha2/pages/propos/apropos.dart';
+import 'package:ha2/prediction/prediction.dart';
 import 'package:ha2/realtime_database/areaChart.dart';
 import 'package:ha2/realtime_database/linechart.dart';
 import 'package:ha2/realtime_database/get_data.dart';
 import 'package:ha2/realtime_database/rtime_test.dart';
+import 'package:ha2/realtime_database/test.dart';
 import 'package:ha2/realtime_database/testChart.dart';
+import 'package:ha2/realtime_database/test_create_counter.dart';
+import 'package:ha2/serviceAnalyse/services/analyse_apple.dart';
 import 'package:ha2/welcome/page1.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -94,20 +101,20 @@ class _MainPageState extends State<MainPage> {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) => FutureBuilder(
-        // Initialize FlutterFire:
+        // Initialisation de  FlutterFire:
         future: _initialization,
         builder: (context, snapshot) {
-          // Check for errors
+          // Vérification des erreurs, s'il ya une erreur, charger la page d erreur
           if (snapshot.hasError) {
             return Erreur();
           }
 
-          // Once complete, show your application
+          // Si flutterfire a bien démarré, lancer la page
           if (snapshot.connectionState == ConnectionState.done) {
-            return PageUne();
+            return DashboardPageControl();
           }
 
-          // Otherwise, show something whilst waiting for initialization to complete
+          // Sinon montrer cette page d'attente
           return Attente();
         },
       );

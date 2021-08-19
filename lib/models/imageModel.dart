@@ -20,4 +20,21 @@ class ImageDetails {
     required this.title,
     required this.details,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'imagePath': imagePath,
+      'price': price,
+      'photographer': photographer,
+      'title': title,
+      'details': details,
+    };
+  }
+
+  ImageDetails.fromFirestore(Map<String, dynamic> firestore)
+      : imagePath = firestore['imagePath'],
+        price = firestore['price'],
+        photographer = firestore['photographer'],
+        title = firestore['title'],
+        details = firestore['details'];
 }

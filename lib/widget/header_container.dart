@@ -8,7 +8,7 @@ class HeaderContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 0.3,
       decoration: BoxDecoration(
           gradient: LinearGradient(
               colors: [Colors.green, Colors.lightGreen],
@@ -18,12 +18,12 @@ class HeaderContainer extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Positioned(
-            bottom: 20,
+              bottom: 20,
               right: 20,
               child: Text(
-            text,
-            style: TextStyle(color: Colors.white,fontSize: 20),
-          )),
+                text,
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              )),
           Center(
             child: Image.asset("assets/images/logohagri.png"),
           ),

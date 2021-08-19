@@ -263,10 +263,15 @@ class _ServicesPageState extends State<AnalyseCoton> {
                                         )),
                                     //si c est la gallery
                                     TextButton(
-                                        onPressed: () {
-                                          _onImageButtonPressed(
-                                              ImageSource.gallery,
-                                              context: context);
+                                        onPressed: () async {
+                                          final pickedFile =
+                                              await piker.pickImage(
+                                            source: ImageSource.gallery,
+                                          );
+
+                                          // _onImageButtonPressed(
+                                          //     ImageSource.gallery,
+                                          //     context: context);
                                         },
                                         child: Icon(Icons.collections_outlined))
                                   ],

@@ -12,6 +12,7 @@ import 'package:ha2/pages/params/settings.dart';
 import 'package:ha2/pages/propos/apropos.dart';
 import 'package:ha2/pages/testPages/people_page.dart';
 import 'package:ha2/pages/testPages/user_page.dart';
+import 'package:ha2/prediction/prediction.dart';
 import 'package:ha2/serviceAnalyse/services/analyse_coton.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
@@ -66,8 +67,8 @@ class NavigationDrawerWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   buildMenuItem(
-                    text: 'Echanges',
-                    icon: Icons.question_answer_outlined,
+                    text: 'Prédictions',
+                    icon: Icons.batch_prediction_outlined,
                     onClicked: () => selectedItem(context, 3),
                   ),
                   const SizedBox(height: 20),
@@ -203,7 +204,7 @@ class NavigationDrawerWidget extends StatelessWidget {
         break;
       case 3:
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => EchangePage(),
+          builder: (context) => Predictions(),
         ));
         break;
       case 4:

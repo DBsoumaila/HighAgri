@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:ha2/models/imageModel.dart';
 import 'package:ha2/pages/drawerPages/services/coton.dart';
 import 'package:ha2/pages/gallery/gallerypage.dart' as imagesGal;
+import 'package:ha2/pages/gallery/gallerypage.dart';
 import 'package:http/http.dart' as http;
 import 'package:ha2/camera/global_library_file.dart' as globals;
 import 'package:path/path.dart';
@@ -47,7 +49,9 @@ class DisplayPictureScreen extends StatelessWidget {
           children: [
             //les actions a mener sur une image
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                getFirebaseImageFolder();
+              },
               child: Icon(Icons.delete_outline),
             ),
             TextButton(
@@ -57,7 +61,12 @@ class DisplayPictureScreen extends StatelessWidget {
               child: Icon(Icons.history_outlined),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                // add image tofirebase in gallery
+                await uploadImageToFirebase(context, File(imagePath));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => GalleryPage()));
+              },
               child: Icon(Icons.task_alt_outlined),
             ),
             TextButton(
@@ -88,6 +97,34 @@ class DisplayPictureScreen extends StatelessWidget {
   }
 }
 
+// envoyer des images dans firebase storage
+Future uploadImageToFirebase(BuildContext context, File _imageFile) async {
+  String fileName = basename(_imageFile.path);
+  firebase_storage.Reference firebaseStorageRef = firebase_storage
+      .FirebaseStorage.instance
+      .ref()
+      .child('gallery/$fileName');
+  firebase_storage.UploadTask uploadTask =
+      firebaseStorageRef.putFile(_imageFile);
+  firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+  taskSnapshot.ref.getDownloadURL().then(
+        (value) => print("Done: $value"),
+      );
+}
+
+void getFirebaseImageFolder() {
+  final firebase_storage.Reference firebaseStorageRef =
+      firebase_storage.FirebaseStorage.instance.ref().child('gallery');
+
+  // on liste toutes les images
+  firebaseStorageRef.listAll().then((result) {
+    print("result is $result");
+  });
+}
+
+//Recupérer des images de firebase storage
+
+// crea album
 Future<Traitement> createAlbum(String imagePath, bool? verif) async {
   final response = await http.post(
     Uri.parse('https://cotonapp7-ago324jaqa-ey.a.run.app/'),

@@ -59,32 +59,32 @@ class _ChartsPageState extends State<HumiditeChart> {
   }
 
   Timer? timer;
-  List<SalesData> _chartData = <SalesData>[];
+  List<SalesDatadat> _chartData = <SalesDatadat>[];
 // Redraw the series with updating or creating new points by using this controller.
   ChartSeriesController? _chartSeriesController;
 // Count of type integer which binds as x value for the series
   int count = 19;
   //Initialize the data source
-  List<SalesData> chartData = <SalesData>[
-    SalesData(0, 42),
-    SalesData(1, 47),
-    SalesData(2, 33),
-    SalesData(3, 49),
-    SalesData(4, 54),
-    SalesData(5, 41),
-    SalesData(6, 58),
-    SalesData(7, 51),
-    SalesData(8, 98),
-    SalesData(9, 41),
-    SalesData(10, 53),
-    SalesData(11, 72),
-    SalesData(12, 86),
-    SalesData(13, 52),
-    SalesData(14, 4),
-    SalesData(15, 92),
-    SalesData(16, 86),
-    SalesData(17, 72),
-    SalesData(18, 94),
+  List<SalesDatadat> chartData = <SalesDatadat>[
+    SalesDatadat(0, 42),
+    SalesDatadat(1, 47),
+    SalesDatadat(2, 33),
+    SalesDatadat(3, 49),
+    SalesDatadat(4, 54),
+    SalesDatadat(5, 41),
+    SalesDatadat(6, 58),
+    SalesDatadat(7, 51),
+    SalesDatadat(8, 98),
+    SalesDatadat(9, 41),
+    SalesDatadat(10, 53),
+    SalesDatadat(11, 72),
+    SalesDatadat(12, 86),
+    SalesDatadat(13, 52),
+    SalesDatadat(14, 4),
+    SalesDatadat(15, 92),
+    SalesDatadat(16, 86),
+    SalesDatadat(17, 72),
+    SalesDatadat(18, 94),
   ];
 
   @override
@@ -103,8 +103,8 @@ class _ChartsPageState extends State<HumiditeChart> {
     return Scaffold(
         body: Center(
       child: SfCartesianChart(
-        series: <LineSeries<SalesData, int>>[
-          LineSeries<SalesData, int>(
+        series: <LineSeries<SalesDatadat, int>>[
+          LineSeries<SalesDatadat, int>(
             onRendererCreated: (ChartSeriesController controller) {
               // Assigning the controller to the _chartSeriesController.
               _chartSeriesController = controller;
@@ -112,8 +112,8 @@ class _ChartsPageState extends State<HumiditeChart> {
             // Binding the chartData to the dataSource of the line series.
             ,
             dataSource: chartData,
-            xValueMapper: (SalesData sales, _) => sales.minutes,
-            yValueMapper: (SalesData sales, _) => sales.sales,
+            xValueMapper: (SalesDatadat sales, _) => sales.minutes,
+            yValueMapper: (SalesDatadat sales, _) => sales.sales,
           )
         ],
       ),
@@ -121,7 +121,7 @@ class _ChartsPageState extends State<HumiditeChart> {
   }
 
   void _updateDataSource(Timer timer) {
-    chartData.add(SalesData(count, 10 + Random().nextInt(100).toDouble()));
+    chartData.add(SalesDatadat(count, 10 + Random().nextInt(100).toDouble()));
     if (chartData.length == 20) {
       // Removes the last index data of data source.
       chartData.removeAt(0);
@@ -134,7 +134,8 @@ class _ChartsPageState extends State<HumiditeChart> {
   }
 
   void _updateDataSourceFromFire(Timer timer) {
-    chartData.add(SalesData(count, double.parse(_airHumiditeRef.toString())));
+    chartData
+        .add(SalesDatadat(count, double.parse(_airHumiditeRef.toString())));
     if (chartData.length == 20) {
       // Removes the last index data of data source.
       chartData.removeAt(0);
@@ -147,8 +148,8 @@ class _ChartsPageState extends State<HumiditeChart> {
   }
 }
 
-class SalesData {
-  SalesData(this.minutes, this.sales);
+class SalesDatadat {
+  SalesDatadat(this.minutes, this.sales);
   final int minutes;
   final double? sales;
 }

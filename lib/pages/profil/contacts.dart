@@ -4,9 +4,36 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ha2/firestore/databaseManager.dart';
+import 'package:ha2/pages/profil/ajouterContact.dart';
 import 'package:ha2/widget/profil_pic_widget.dart';
 
-class Contacts extends StatelessWidget {
+class Contacts extends StatefulWidget {
+  @override
+  _ContactsState createState() => _ContactsState();
+}
+
+class _ContactsState extends State<Contacts> {
+  List contactsList = [];
+  @override
+  void initState() {
+    super.initState();
+
+    fetchDatabaseList();
+  }
+
+  fetchDatabaseList() async {
+    dynamic resultant = await DatabaseManager().getContacts();
+
+    if (resultant == null) {
+      print('Impossible de recupérer les contacts');
+    } else {
+      setState(() {
+        contactsList = resultant;
+      });
+    }
+  }
+
   List<ProfilElements> mesContacts = [
     ProfilElements(
       num: "96 58 45 78 95",
@@ -43,6 +70,7 @@ class Contacts extends StatelessWidget {
       onpress: () {},
     ),
   ];
+
   @override
   Widget build(BuildContext context) => Scaffold(
         //drawer: NavigationDrawerWidget(),
@@ -51,9 +79,34 @@ class Contacts extends StatelessWidget {
           centerTitle: true,
           backgroundColor: Colors.green,
         ),
-        body: VueInitiale(),
+        body: Container(
+            child: ListView.builder(
+                itemCount: contactsList.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: EdgeInsets.all(5.0),
+                    elevation: 10.0,
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text(contactsList[index]['nom']),
+                      subtitle: Text(contactsList[index]['telephone']),
+                      leading: CircleAvatar(
+                        child: Image(
+                          image: AssetImage('assets/images/profil_girl.jpg'),
+                        ),
+                      ),
+                      trailing: Icon(
+                        Icons.phone_enabled_outlined,
+                        color: Colors.black,
+                      ),
+                    ),
+                  );
+                })),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AjouterContact()));
+          },
           backgroundColor: Colors.green,
           child: Icon(
             Icons.person_add_alt_outlined,
@@ -64,6 +117,17 @@ class Contacts extends StatelessWidget {
 
 class VueInitiale extends StatelessWidget {
   const VueInitiale({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListInitialeContacts();
+  }
+}
+
+class ListInitialeContacts extends StatelessWidget {
+  const ListInitialeContacts({
     Key? key,
   }) : super(key: key);
 

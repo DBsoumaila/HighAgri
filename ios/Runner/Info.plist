@@ -41,13 +41,14 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>Privacy - Camera Usage Description</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string> Privacy - Photo Library Usage Description</string>
+
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Privacy - Microphone Usage Description</string>
-	 
+	<key>NSCameraUsageDescription</key>
+	<string>Need to access your camera to capture a photo add and update profile picture.</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need to access your photo library to select a photo add and update profile picture</string>
 
 </dict>
 </plist>

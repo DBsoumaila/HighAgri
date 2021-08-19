@@ -38,10 +38,10 @@ class _MyHomePageState extends State<MyHomePageData> {
     // Demonstrates configuring the database directly
     final FirebaseDatabase database = FirebaseDatabase(app: widget.app);
     _messagesRef = database.reference().child('soil_ph');
-    database.reference().child('counter').get().then((DataSnapshot? snapshot) {
-      print(
-          'Connected to directly configured database and read ${snapshot!.value}');
-    });
+    // database.reference().child('counter').get().then((DataSnapshot? snapshot) {
+    //   print(
+    //       'Connected to directly configured database and read ${snapshot!.value}');
+    // });
     database.setPersistenceEnabled(true);
     database.setPersistenceCacheSizeBytes(10000000);
     _counterRef.keepSynced(true);

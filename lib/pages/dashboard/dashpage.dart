@@ -9,7 +9,11 @@ import 'package:ha2/camera/camera.dart';
 import 'package:ha2/camera/displayImage.dart';
 import 'package:ha2/pages/charts/phChart.dart';
 import 'package:ha2/realtime_database/areaChart.dart';
+import 'package:ha2/realtime_database/areachart_phosphore.dart';
+import 'package:ha2/realtime_database/areachart_temperature.dart';
 import 'package:ha2/realtime_database/humiditeGrap.dart';
+import 'package:ha2/realtime_database/phosphore_graphe.dart';
+import 'package:ha2/realtime_database/services_realtime.dart';
 import 'package:ha2/realtime_database/testChart.dart';
 import 'package:ha2/widget/navigation_drawer_widget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -50,6 +54,19 @@ class _DashBoardPageState extends State<DashBoardPage> {
   late DatabaseReference _pHRef;
   late StreamSubscription<Event> _pHSubscription;
 
+  //valeurs singulières du dashboard
+  late double _ph = 0.0;
+  late double _Phosphore = 0.1;
+  late double _Humdid = 0.1;
+  late double _temperature = 0.1;
+  double test = 0.2;
+
+  List humdvalues = [];
+  List tempvalues = [];
+  List phvalues = [];
+  List phosphorevalues = [];
+
+// charger toutes ces valeurs au démarrage
   @override
   void initState() {
     super.initState();
@@ -67,6 +84,124 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
     database.setPersistenceEnabled(true);
     database.setPersistenceCacheSizeBytes(10000000);
+    _setupPh();
+    _setupPhosphore();
+    _setupHumid();
+    _setupTemperature();
+  }
+
+//initialiser la valeur de température
+  _setupTemperature() async {
+    double valeurfinale = 0.0;
+    Query needsSnapshot = FirebaseDatabase.instance
+        .reference()
+        .child("air_temperature")
+        .orderByKey();
+
+    await needsSnapshot.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> values = snapshot.value;
+      //values ici c est toutes les valeurs de la base de donnes
+
+      values.forEach((key, values) {
+        valeurfinale = double.parse(values.toString());
+        // print(valeurfinale.toString());
+        tempvalues.add(valeurfinale);
+      });
+      //la dernierve valeur
+
+      _temperature = tempvalues[tempvalues.length - 1];
+
+      globals.temperature = _temperature;
+    });
+
+    setState(() {
+      globals.temperature = _temperature;
+    });
+  }
+
+//initialiser la valeur de phosphore
+  _setupHumid() async {
+    double valeurfinale = 0.0;
+    Query needsSnapshot = FirebaseDatabase.instance
+        .reference()
+        .child("air_humidity")
+        .orderByKey();
+
+    await needsSnapshot.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> values = snapshot.value;
+      //values ici c est toutes les valeurs de la base de donnes
+
+      values.forEach((key, values) {
+        valeurfinale = double.parse(values.toString());
+        // print(valeurfinale.toString());
+        humdvalues.add(valeurfinale);
+      });
+      //la dernierve valeur
+
+      _Humdid = humdvalues[humdvalues.length - 1];
+
+      globals.humidite = _Humdid;
+    });
+
+    setState(() {
+      globals.humidite = _Humdid;
+    });
+  }
+
+//initialiser la valeur de phosphore
+  _setupPhosphore() async {
+    double valeurfinale = 0.0;
+    Query needsSnapshot = FirebaseDatabase.instance
+        .reference()
+        .child("phosphorous_value")
+        .orderByKey();
+
+    await needsSnapshot.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> values = snapshot.value;
+      //values ici c est toutes les valeurs de la base de donnes
+
+      values.forEach((key, values) {
+        valeurfinale = double.parse(values.toString());
+        // print(valeurfinale.toString());
+        phosphorevalues.add(valeurfinale);
+      });
+      //la dernierve valeur
+
+      _Phosphore = phosphorevalues[phosphorevalues.length - 1];
+
+      globals.phosphore = _Phosphore;
+    });
+
+    setState(() {
+      globals.phosphore = _Phosphore;
+    });
+  }
+
+//initialiser la valeur de ph
+  _setupPh() async {
+    double valeurfinale = 0.0;
+    Query needsSnapshot =
+        FirebaseDatabase.instance.reference().child("soil_ph").orderByKey();
+
+    await needsSnapshot.once().then((DataSnapshot snapshot) {
+      Map<dynamic, dynamic> values = snapshot.value;
+      //values ici c est toutes les valeurs de la base de donnes
+
+      values.forEach((key, values) {
+        valeurfinale = double.parse(values.toString());
+        //  print(valeurfinale.toString());
+        phvalues.add(valeurfinale);
+      });
+      //la dernierve valeur
+
+      _ph = phvalues[phvalues.length - 1];
+      //print('TTTTT' + phAprendre.toString());
+      globals.ph = _ph;
+    });
+
+    setState(() {
+      globals.ph = _ph;
+    });
   }
 
   @override
@@ -355,6 +490,75 @@ class _DashBoardPageState extends State<DashBoardPage> {
       ),
     );
   }
+
+  Material AreaChartTemperature(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Container(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+                Container(
+                    height: 300, child: Center(child: TemperatureChartArea()))
+                //Initialize the chart widget
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  //Phosphore area
+
+  Material AreaChartTempPhosphore(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Container(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+                Container(height: 200, child: Center(child: PhosphoreArea()))
+                //Initialize the chart widget
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   //to update datat  from data table
 
   Material AreaChartTemp(String title) {
@@ -418,6 +622,46 @@ class _DashBoardPageState extends State<DashBoardPage> {
                   height: 300.0,
                   child: Center(
                     child: HumiditeChart(app: globals.appl),
+                  ),
+                ),
+              ),
+            )
+            //Initialize the chart widget
+          ],
+        ),
+      )),
+    );
+  }
+
+  // Graphe de visualisation de Phosphore
+  Material ChartPhosphoreEvolution(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Center(
+          child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(1.0),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.blueAccent,
+                ),
+              ),
+            ),
+            Container(
+              child: Center(
+                child: Container(
+                  height: 300.0,
+                  child: Center(
+                    child: PhosphoreChart(app: globals.appl),
                   ),
                 ),
               ),
@@ -531,19 +775,20 @@ class _DashBoardPageState extends State<DashBoardPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: myTextItems("Hum.", "90"),
+                  child: myTextItems("Hum.", globals.humidite.toString()),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: myTextItems("pH", "89"),
+                  child: myTextItems("pH", globals.ph.toString()),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: myTextItems("pKa", "4"),
+                  child: myTextItems("Phos", globals.phosphore.toString()),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: myTextItems("Temp(%C)", "48.0"),
+                  child:
+                      myTextItems("Temp(%C)", globals.temperature.toString()),
                 ),
               ],
             ),
@@ -563,16 +808,15 @@ class _DashBoardPageState extends State<DashBoardPage> {
               child: ChartPhEvolution("Graphe réel du pH"),
             ),
             Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ChartPhosphoreEvolution("Evolution du  Phosphore")),
+            Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Chart("Evolution de T(°C)"),
+              child: AreaChartTempPhosphore("Evolution du Phosphore"),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Chart("Evolution du pKa"),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Chart("Evolution de l'Hmd."),
+              child: AreaChartTemperature("Graphique de Température"),
             ),
           ],
           staggeredTiles: [
@@ -581,8 +825,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
             StaggeredTile.extent(4, 300.0),
             StaggeredTile.extent(4, 400.0),
             StaggeredTile.extent(4, 400.0),
-            StaggeredTile.extent(4, 250.0),
-            StaggeredTile.extent(4, 250.0),
+            StaggeredTile.extent(4, 400.0),
+            StaggeredTile.extent(4, 300.0),
+            StaggeredTile.extent(4, 400.0),
           ],
         ),
       ),

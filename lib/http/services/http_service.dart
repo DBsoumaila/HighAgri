@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:ha2/models/post.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +11,7 @@ class HttpService {
 
 // recupération des valeurs de posts venant du web à travers une Uri
   Future<List<Post>> getPosts() async {
-    Response res = await get(postsURL);
+    var res = await get(postsURL);
 
     if (res.statusCode == 200) {
       List<dynamic> body = jsonDecode(res.body);
@@ -27,10 +28,29 @@ class HttpService {
     }
   }
 
+  // recupération de la prédiction
+  getPrediction() async {
+    // recuperation simple
+    try {
+      var responset = await Dio().get("https://highagriv6.herokuapp.com");
+
+      print(responset.data.toString());
+      return responset.data.toString();
+
+      // recuperation get avec des   PARAMETERS
+      // var responseParameters = await Dio()
+      //     .get('/test', queryParameters: {'id': 12, 'name': 'wendu'});
+      // print(responseParameters.data.toString());
+    } catch (e) {
+      print(e);
+      return e.toString();
+    }
+  }
+
 // suppression
   Future<void> deletePost(int id) async {
     var deleteUri = Uri.parse('$postsURL/$id');
-    Response res = await delete(deleteUri);
+    var res = await delete(deleteUri);
 
     if (res.statusCode == 200) {
       print("Bien supprimé");

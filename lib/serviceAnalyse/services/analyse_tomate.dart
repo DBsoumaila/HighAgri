@@ -298,7 +298,7 @@ class _ServicesPageState extends State<AnalyseTomate> {
                         ],
                       ),
                       Container(
-                        height: 200.0,
+                        height: 300,
                         width: double.infinity,
                         child: Card(
                           elevation: 7.0,
