@@ -39,7 +39,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
         appBar: AppBar(
           title: Text(DashboardPageControl.title),
           actions: [
-            Image.asset('assets/images/logohagri.png'),
+            Image.asset(
+              'assets/images/logohagri.png',
+            ),
           ],
         ),
         body:
