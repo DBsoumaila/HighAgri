@@ -2,6 +2,9 @@ library my.globals;
 
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ha2/realtime_database/area_humidite.dart';
+import 'package:ha2/realtime_database/area_nitrogene.dart';
+import 'package:ha2/realtime_database/area_potassium.dart';
 import 'package:ha2/realtime_database/areachart_phosphore.dart';
 import 'package:ha2/realtime_database/areachart_temperature.dart';
 import 'package:ha2/realtime_database/phosphore_graphe.dart';
@@ -34,3 +37,6 @@ List<SalesData> phosphorevaleurs = [];
 //area charts
 List<SalesDatat> phosphorevaleursPh = [];
 List<SalesDatat2> temperatureValeurs = [];
+List<SalesDataNitrogene> nitrogeneeValeurs = [];
+List<SalesDataPotass> potassValeurs = [];
+List<SalesDataHumidite> humidValeurs = [];

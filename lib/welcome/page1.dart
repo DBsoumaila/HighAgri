@@ -55,12 +55,12 @@ class _PageUneState extends State<PageUne> {
                   children: <Widget>[
                     Container(
                       width: 300,
-                      height: 200,
+                      height: 160,
                       child: Image.asset('assets/images/logohagri.png'),
                     ),
 
                     Card(
-                      margin: EdgeInsets.only(bottom: 30.0, top: 10.0),
+                      margin: EdgeInsets.only(bottom: 10.0, top: 10.0),
                       elevation: 10.0,
                       shadowColor: Colors.black,
                       color: Colors.green,
@@ -221,7 +221,7 @@ class _PageUneState extends State<PageUne> {
                       child: Image.asset('assets/images/logohagri.png'),
                     ),
                     Card(
-                      margin: EdgeInsets.only(bottom: 30.0, top: 10.0),
+                      margin: EdgeInsets.only(bottom: 10.0, top: 10.0),
                       elevation: 10.0,
                       shadowColor: Colors.black,
                       color: Colors.green,

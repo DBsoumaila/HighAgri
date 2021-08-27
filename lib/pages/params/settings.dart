@@ -53,14 +53,27 @@ class _MyHomePageState extends State<MyHomePage> {
             : ThemeData.light().copyWith(accentColor: color),
         home: Scaffold(
           appBar: AppBar(
-            title: Text(widget.title),
-            centerTitle: true,
+            actions: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Icon(Icons.arrow_back_outlined)),
+                    Text(widget.title),
+                  ],
+                ),
+              ),
+            ],
           ),
           body: Center(
             child: Column(
               children: <Widget>[
                 _buildThemeSwitch(context),
-                _buildPreferenceSwitch(context),
+                // _buildPreferenceSwitch(context),
                 SizedBox(
                   height: 50.0,
                 ),
@@ -73,27 +86,27 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildPreferenceSwitch(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        Text('Partager Pref'),
-        Switch(
-            activeColor: Theme.of(context).accentColor,
-            value: _isUsingHive,
-            onChanged: (newVal) {
-              if (kIsWeb) {
-                return;
-              }
-              _isUsingHive = newVal;
-              setState(() {
-                initSettings();
-              });
-            }),
-        Text('Stockage Hive'),
-      ],
-    );
-  }
+  // Widget _buildPreferenceSwitch(BuildContext context) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //     children: <Widget>[
+  //       Text('Partager Pref'),
+  //       Switch(
+  //           activeColor: Theme.of(context).accentColor,
+  //           value: _isUsingHive,
+  //           onChanged: (newVal) {
+  //             if (kIsWeb) {
+  //               return;
+  //             }
+  //             _isUsingHive = newVal;
+  //             setState(() {
+  //               initSettings();
+  //             });
+  //           }),
+  //       Text('Stockage Hive'),
+  //     ],
+  //   );
+  // }
 
   Widget _buildThemeSwitch(BuildContext context) {
     return Row(
@@ -123,16 +136,16 @@ class _AppBodyState extends State<AppBody> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _buildClearCacheButton(context),
+        // _buildClearCacheButton(context),
         SizedBox(
           height: 25.0,
         ),
-        ElevatedButton(
-          onPressed: () {
-            openAppSettings(context);
-          },
-          child: Text('Demo'),
-        ),
+        //   ElevatedButton(
+        //     onPressed: () {
+        //       openAppSettings(context);
+        //     },
+        //     child: Text('Demo'),
+        //   ),
       ],
     );
   }

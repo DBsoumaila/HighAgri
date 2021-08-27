@@ -112,7 +112,13 @@ class _RegPageState extends State<RegPage> {
                               ]),
                             ),
                             TextButton(
-                                onPressed: () {}, child: Text("Se connecter")),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Login()));
+                                },
+                                child: Text("Se connecter")),
                           ],
                         ),
                       ],

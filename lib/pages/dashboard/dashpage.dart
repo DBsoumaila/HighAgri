@@ -9,6 +9,9 @@ import 'package:ha2/camera/camera.dart';
 import 'package:ha2/camera/displayImage.dart';
 import 'package:ha2/pages/charts/phChart.dart';
 import 'package:ha2/realtime_database/areaChart.dart';
+import 'package:ha2/realtime_database/area_humidite.dart';
+import 'package:ha2/realtime_database/area_nitrogene.dart';
+import 'package:ha2/realtime_database/area_potassium.dart';
 import 'package:ha2/realtime_database/areachart_phosphore.dart';
 import 'package:ha2/realtime_database/areachart_temperature.dart';
 import 'package:ha2/realtime_database/humiditeGrap.dart';
@@ -491,7 +494,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     );
   }
 
-  Material AreaChartTemperature(String title) {
+  Material areaChartTemperature(String title) {
     return Material(
       color: Colors.white,
       elevation: 14.0,
@@ -524,9 +527,115 @@ class _DashBoardPageState extends State<DashBoardPage> {
       ),
     );
   }
+
+//himidite du sol
+
+// Potassium
+  Material areaHumiditeDuSol(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Container(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+                Container(height: 300, child: Center(child: HumiditeDuSol()))
+                //Initialize the chart widget
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+// Potassium
+  Material areaPotassim(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Container(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+                Container(height: 300, child: Center(child: PotassiumValue()))
+                //Initialize the chart widget
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //nitrogène
+
+  Material areaChartNitrogene(String title) {
+    return Material(
+      color: Colors.white,
+      elevation: 14.0,
+      borderRadius: BorderRadius.circular(24.0),
+      shadowColor: Color(0x802196F3),
+      child: Container(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                ),
+                Container(height: 300, child: Center(child: NitrogeneValue()))
+                //Initialize the chart widget
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   //Phosphore area
 
-  Material AreaChartTempPhosphore(String title) {
+  Material areaChartTempPhosphore(String title) {
     return Material(
       color: Colors.white,
       elevation: 14.0,
@@ -561,7 +670,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
   //to update datat  from data table
 
-  Material AreaChartTemp(String title) {
+  Material areaChartTemp(String title) {
     return Material(
       color: Colors.white,
       elevation: 14.0,
@@ -594,7 +703,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     );
   }
 
-  Material ChartPhEvolution(String title) {
+  Material chartPhEvolution(String title) {
     return Material(
       color: Colors.white,
       elevation: 14.0,
@@ -634,7 +743,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
   }
 
   // Graphe de visualisation de Phosphore
-  Material ChartPhosphoreEvolution(String title) {
+  Material chartPhosphoreEvolution(String title) {
     return Material(
       color: Colors.white,
       elevation: 14.0,
@@ -673,7 +782,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     );
   }
 
-  Material ChartPhLive(String title) {
+  Material chartPhLive(String title) {
     return Material(
       color: Colors.white,
       elevation: 14.0,
@@ -713,7 +822,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
   }
 
   //to update datat  from data table
-  Material Chart(String title) {
+  Material chart(String title) {
     return Material(
       color: Colors.white,
       elevation: 14.0,
@@ -796,27 +905,39 @@ class _DashBoardPageState extends State<DashBoardPage> {
               padding: const EdgeInsets.all(8.0),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: AreaChartTemp('Evolution de l\'humidité'),
+                child: areaChartTemp('Evolution de l\'humidité de l\'air'),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ChartPhLive("Live  Humidité"),
+              child: chartPhLive("Live  Humidité"),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ChartPhEvolution("Graphe réel du pH"),
+              child: chartPhEvolution("Graphe réel du pH"),
             ),
             Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ChartPhosphoreEvolution("Evolution du  Phosphore")),
+                child: chartPhosphoreEvolution("Evolution du  Phosphore")),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: AreaChartTempPhosphore("Evolution du Phosphore"),
+              child: areaChartTempPhosphore("Evolution du Phosphore"),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: AreaChartTemperature("Graphique de Température"),
+              child: areaChartTemperature("Graphique de Température"),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: areaChartNitrogene("Nitrogène"),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: areaPotassim("Balayage du Potassim(K)"),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: areaHumiditeDuSol("Humidité du sol"),
             ),
           ],
           staggeredTiles: [
@@ -827,6 +948,9 @@ class _DashBoardPageState extends State<DashBoardPage> {
             StaggeredTile.extent(4, 400.0),
             StaggeredTile.extent(4, 400.0),
             StaggeredTile.extent(4, 300.0),
+            StaggeredTile.extent(4, 400.0),
+            StaggeredTile.extent(4, 400.0),
+            StaggeredTile.extent(4, 400.0),
             StaggeredTile.extent(4, 400.0),
           ],
         ),

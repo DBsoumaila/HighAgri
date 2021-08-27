@@ -230,8 +230,7 @@ class _ServicesPageState extends State<Coton> {
                                   child: Center(
                                 child: (globals.isResponse)
                                     ? Text('Vos résultats d\'analyse  ici')
-                                    : ReponseDuServeur(
-                                        titre, code.toString(), message, date),
+                                    : ReponseDuServeur(titre, date),
                               ))),
                         ),
                       )

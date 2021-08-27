@@ -147,8 +147,7 @@ class _ServicesPageState extends State<AnalyseTomate> {
   }
 
   Widget vueCamera() {
-    return ReponseDuServeur(
-        widget.titre, widget.code, widget.message, widget.date);
+    return ReponseDuServeur(widget.titre, widget.date);
   }
 
   final ImagePicker piker = ImagePicker();
@@ -320,7 +319,7 @@ class _ServicesPageState extends State<AnalyseTomate> {
       ));
 }
 
-Widget ReponseDuServeur(titre, int statut, reponse, date) {
+Widget ReponseDuServeur(titre, date) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -332,23 +331,8 @@ Widget ReponseDuServeur(titre, int statut, reponse, date) {
       Divider(
         color: Colors.black87,
       ),
-      Text(
-        'Statut:' + '         ' + statut.toString(),
-        style: TextStyle(
-          fontSize: 16,
-        ),
-      ),
-      Text(
-        'Analyse:' + '         ' + reponse,
-        style: TextStyle(
-          fontSize: 16,
-        ),
-      ),
       SizedBox(
         height: 10.0,
-      ),
-      Divider(
-        color: Colors.black45,
       ),
       Text(
         'date:',

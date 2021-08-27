@@ -7,7 +7,7 @@ import 'package:ha2/pages/propos/team.dart';
 class AboutUs extends StatelessWidget {
   List<ImageDetails> _images = [
     ImageDetails(
-      imagePath: 'assets/squad/aya.png',
+      imagePath: 'assets/squad/aya2.JPG',
       price: 'description',
       photographer: 'data ingenieur',
       title: 'BENTALEB Aya',
@@ -31,7 +31,7 @@ class AboutUs extends StatelessWidget {
           'Data Engeneer chez High Agri. Travaille sur l\'irrigation et l\'automation de drone.',
     ),
     ImageDetails(
-      imagePath: 'assets/squad/youssef.png',
+      imagePath: 'assets/squad/y.png',
       price: 'description',
       photographer: 'Embebed Systems Engeneer',
       title: 'L. Youssef',
@@ -47,7 +47,7 @@ class AboutUs extends StatelessWidget {
           'La directrice Marketing de High Agri. Elle s\'occupe de faire connaitre notre entreprise et nos solutions. C\'est la vitrine de notre entreprise à l\'extérieur.',
     ),
     ImageDetails(
-      imagePath: 'assets/squad/soumaila.png',
+      imagePath: 'assets/squad/soumaila_final.jpg',
       price: 'description',
       photographer: 'Software Ingeneer',
       title: 'DABANGUIBE Soumaïla ',
@@ -68,38 +68,41 @@ class AboutUs extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(
-                      icon,
-                      color: Colors.red,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        icon,
+                        color: Colors.red,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.blueAccent,
-                          fontWeight: FontWeight.bold),
+                    SizedBox(
+                      width: 10.0,
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      subtitle,
-                      style: TextStyle(
-                          fontSize: 18.0, fontWeight: FontWeight.bold),
+                    Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        subtitle,
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -113,7 +116,10 @@ class AboutUs extends StatelessWidget {
       color: Colors.white,
       elevation: 14.0,
       borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20), topRight: Radius.circular(20.0)),
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20.0),
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20)),
       shadowColor: Color(0x802196F3),
       child: Center(
           child: Padding(
@@ -179,7 +185,7 @@ class AboutUs extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Expanded(
+                  child: Center(
                     child: myTextItems(
                         "Squad", 'High Agri', Icons.groups_outlined),
                   ),

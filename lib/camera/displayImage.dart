@@ -205,7 +205,7 @@ class Traitement {
   }
 }
 
-Widget ReponseDuServeur(titre, statut, reponse, dateRequete) {
+Widget ReponseDuServeur(titre, dateRequete) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -213,18 +213,6 @@ Widget ReponseDuServeur(titre, statut, reponse, dateRequete) {
       Text(
         titre,
         style: TextStyle(fontSize: 20, color: Colors.green),
-      ),
-      Text(
-        statut,
-        style: TextStyle(
-          fontSize: 16,
-        ),
-      ),
-      Text(
-        reponse,
-        style: TextStyle(
-          fontSize: 16,
-        ),
       ),
       Text(
         dateRequete,

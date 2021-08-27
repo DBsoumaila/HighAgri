@@ -101,7 +101,7 @@ class _PredictionsState extends State<Predictions> {
                     ),
                     Text(
                       prediction.toString(),
-                      style: TextStyle(color: Colors.amber, fontSize: 30.0),
+                      style: TextStyle(color: Colors.green, fontSize: 30.0),
                     )
                   ],
                 ),

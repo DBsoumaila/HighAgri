@@ -111,7 +111,7 @@ class _MainPageState extends State<MainPage> {
 
           // Si flutterfire a bien démarré, lancer la page
           if (snapshot.connectionState == ConnectionState.done) {
-            return DashboardPageControl();
+            return PageUne();
           }
 
           // Sinon montrer cette page d'attente
