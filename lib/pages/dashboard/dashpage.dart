@@ -917,9 +917,6 @@ class _DashBoardPageState extends State<DashBoardPage> {
               child: chartPhEvolution("Graphe réel du pH"),
             ),
             Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: chartPhosphoreEvolution("Evolution du  Phosphore")),
-            Padding(
               padding: const EdgeInsets.all(8.0),
               child: areaChartTempPhosphore("Evolution du Phosphore"),
             ),
@@ -946,7 +943,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
             StaggeredTile.extent(4, 300.0),
             StaggeredTile.extent(4, 400.0),
             StaggeredTile.extent(4, 400.0),
-            StaggeredTile.extent(4, 400.0),
+
             StaggeredTile.extent(4, 300.0),
             StaggeredTile.extent(4, 400.0),
             StaggeredTile.extent(4, 400.0),
